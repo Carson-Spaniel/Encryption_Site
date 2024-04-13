@@ -31,8 +31,6 @@ def decrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
         uploaded_file = request.FILES['uploaded_file']
 
-        print(uploaded_file)
-
         # Check if a key file or a password was provided
         if 'key_file' in request.FILES:
             key_file = request.FILES['key_file']
@@ -45,7 +43,6 @@ def decrypt_file(request):
             return {'error': 'Please provide a key file or a password.'}
 
         response = AES_encrypt.decrypt(uploaded_file, aes_key)
-        print(response.filename)
 
         return response
 
