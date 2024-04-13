@@ -45,6 +45,7 @@ def decrypt_file(request):
             return {'error': 'Please provide a key file or a password.'}
 
         response = AES_encrypt.decrypt(uploaded_file, aes_key)
+        print(response.filename)
 
         return response
 

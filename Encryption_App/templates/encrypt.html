@@ -6,13 +6,16 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 20px auto;
             padding: 20px;
             background-color: #f8f9fa;
+            color: #333;
+            max-width: 1200px;
         }
 
         h1, h2 {
             color: #007bff;
+            margin-top: 0;
         }
 
         form {
@@ -27,12 +30,14 @@
             margin-bottom: 5px;
         }
 
-        input[type="password"] {
-            width: 100%;
+        input[type="password"],
+        input[type="file"] {
+            width: calc(100% - 0px);
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 3px;
+            box-sizing: border-box;
         }
 
         input[type="button"] {
@@ -52,6 +57,7 @@
             margin-top: 20px;
             padding: 10px;
             border-radius: 3px;
+            font-weight: bold;
         }
 
         #responseMessage.success {
@@ -80,9 +86,45 @@
             border-color: #007bff;
         }
 
+        nav {
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+        }
+
+        nav ul li {
+            margin-right: 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        nav ul li a:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="/encrypt">Encrypt</a></li>
+            <li><a href="/decrypt">Decrypt</a></li>
+        </ul>
+    </nav>
+
     <h1>Encrypt a File</h1>
     
     <form id="uploadForm" enctype="multipart/form-data" autocomplete="off">
@@ -90,15 +132,20 @@
 
         <!-- File Upload for the File to Encrypt -->
         <h2>File to Encrypt</h2>
-        <input type="file" name="uploaded_file" id="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1')" ondragleave="handleDragLeave(event, 'file1')" ondrop="handleDrop(event, 'file1')">
+        <label id="file1Label" for="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1Label')" ondragleave="handleDragLeave(event, 'file1Label')" ondrop="handleDrop(event, 'file1')">
+            <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')">
+            Drag and drop file here or click to upload
+            <br>
+            <span id="file1Name"></span>
+        </label>
         
         <!-- Password Input (Mutually Exclusive with Key File Upload) -->
         <h2>Encryption Password</h2>
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" placeholder="Enter password" required>
         
         <!-- Password Confirmation Input -->
         <h2>Confirm Encryption Password</h2>
-        <input type="password" name="confirm_password" id="confirm_password">
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
         
         <br><br>
         <input type="button" value="Encrypt" onclick="submitForm()">
@@ -132,7 +179,6 @@
 
             // Call the function to clear inputs when the page loads
             clearAllInputs();
-            console.log(document.getElementById('file1').files[0]);
         });
 
         // Function to handle drag over the drop box
@@ -159,11 +205,24 @@
             handleFiles(files, id);
         }
 
+        // Function to handle files selected from input and display file name
+        function displayFileName(inputId) {
+            const input = document.getElementById(inputId);
+            const fileName = document.getElementById(inputId + 'Name');
+
+            if (input.files.length > 0) {
+                fileName.textContent = 'Selected File: ' + input.files[0].name;
+            } else {
+                fileName.textContent = '';
+            }
+        }
+
         // Function to handle files selected from input
         function handleFiles(files, id) {
             if (files.length > 0) {
                 const inputField = document.getElementById(id);
                 inputField.files = files;
+                displayFileName(id);
             }
         }
 
@@ -229,7 +288,7 @@
                     return filenameMatch[1];
                 }
             }
-            return 'decrypted_file'; // Default filename
+            return 'file'; // Default filename
         }
     </script>
 </body>

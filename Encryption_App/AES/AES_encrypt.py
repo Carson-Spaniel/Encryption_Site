@@ -3,7 +3,6 @@ from Crypto.Hash import SHA256
 import io
 from django.http import FileResponse
 
-
 def hash_string(input_string):
     sha256 = SHA256.new()
     sha256.update(input_string.encode('utf-8'))
@@ -29,12 +28,6 @@ def unpkcs_7(padded_text):
         raise ValueError("Invalid padding bytes")
 
     return padded_text[:-pad_byte]
-
-# def encrypt_folder(folder_path, encrypt_dir, key_path):
-#     for root, _, files in os.walk(folder_path):
-#         for file in files:
-#             file_path = os.path.join(root, file)
-#             encrypt_file(file_path, encrypt_dir, key_path)
 
 def encrypt(file, aes_key):
 
