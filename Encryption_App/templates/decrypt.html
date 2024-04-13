@@ -1,137 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>File Decryption</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
-            max-width: 1200px;
-        }
-
-        h1, h2 {
-            color: #007bff;
-            margin-top: 0;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="password"],
-        input[type="file"] {
-            width: calc(100% - 0px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
-
-        input[type="button"] {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-
-        input[type="button"]:hover {
-            background-color: #0056b3;
-        }
-
-        #responseMessage {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-
-        #responseMessage.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        #responseMessage.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* Drag and Drop Box Styles */
-        .drag-drop-box {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .drag-drop-box.highlight {
-            border-color: #007bff;
-        }
-
-        embed{
-            width: 100%;
-            height: 1000px;
-            margin: 10px auto;
-        }
-
-        nav {
-            margin-bottom: 20px;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            background-color: #007bff;
-        }
-
-        nav ul li {
-            margin-right: 10px;
-        }
-
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 3px;
-            display: inline-block;
-        }
-
-        nav ul li a:hover {
-            background-color: #0056b3;
-        }
-
-    </style>
-</head>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Decryption - {% endblock %}
+{% block content %}
 <body>
-    <nav>
-        <ul>
-            <li><a href="/encrypt">Encrypt</a></li>
-            <li><a href="/decrypt">Decrypt</a></li>
-        </ul>
-    </nav>
-
-    <h1>Decrypt a File</h1>
     
     <form id="uploadForm" enctype="multipart/form-data">
         {% csrf_token %}
@@ -156,76 +27,7 @@
     <div id="responseMessage"></div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Function to clear all input fields
-            function clearAllInputs() {
-                const fileInputs = document.querySelectorAll('input[type="file"]');
-                const passwordInput = document.getElementById('password');
-
-                // Clear file inputs
-                fileInputs.forEach(input => {
-                    input.value = ''; // Clear the value
-                    const fileNameDiv = document.getElementById(input.id + 'Name');
-                    if (fileNameDiv) {
-                        fileNameDiv.textContent = ''; // Clear displayed file name
-                    }
-                });
-
-                // Clear password input
-                if (passwordInput) {
-                    passwordInput.value = '';
-                }
-            }
-
-            // Call the function to clear inputs when the page loads
-            clearAllInputs();
-        });
-
-        // Function to handle drag over the drop box
-        function handleDragOver(event) {
-            event.preventDefault();
-        }
-
-        // Function to handle drag enter the drop box
-        function handleDragEnter(event, id) {
-            document.getElementById(id).classList.add('highlight');
-        }
-
-        // Function to handle drag leave the drop box
-        function handleDragLeave(event, id) {
-            document.getElementById(id).classList.remove('highlight');
-        }
-
-        // Function to handle drop files onto the drop box
-        function handleDrop(event, id) {
-            event.preventDefault();
-            document.getElementById(id).classList.remove('highlight');
-
-            const files = event.dataTransfer.files;
-            handleFiles(files, id);
-        }
-
-        // Function to handle files selected from input and display file name
-        function displayFileName(inputId) {
-            const input = document.getElementById(inputId);
-            const fileName = document.getElementById(inputId + 'Name');
-
-            if (input.files.length > 0) {
-                fileName.textContent = 'Selected File: ' + input.files[0].name;
-            } else {
-                fileName.textContent = '';
-            }
-        }
-
-        // Function to handle files selected from input
-        function handleFiles(files, id) {
-            if (files.length > 0) {
-                const inputField = document.getElementById(id);
-                inputField.files = files;
-                displayFileName(id);
-            }
-        }
-
+        
         // Function to handle form submission
         function submitForm() {
 
@@ -314,4 +116,5 @@
         }
     </script>
 </body>
-</html>
+
+{% endblock %}

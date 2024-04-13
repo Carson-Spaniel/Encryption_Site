@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+    max-width: 1200px;
+}
+
+h1, h2 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="password"],
+input[type="file"] {
+    width: calc(100% - 0px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+input[type="button"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+input[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+#responseMessage {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+#responseMessage.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#responseMessage.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Drag and Drop Box Styles */
+.drag-drop-box {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.drag-drop-box.highlight {
+    border-color: #007bff;
+}
+
+embed{
+    width: 100%;
+    height: 1000px;
+    margin: 10px auto;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #007bff;
+}
+
+nav ul li {
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3;
+}
