@@ -11,25 +11,43 @@
         <h2>File to Decrypt</h2>
 
         <label id="file1Label" for="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1Label')" ondragleave="handleDragLeave(event, 'file1Label')" ondrop="handleDrop(event, 'file1')">
-            <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')">
-            Drag and drop file here or click to upload
+            <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')" accept=".bin">
+            Drag and drop .bin file here or click to upload
             <br>
             <div id="file1Name"></div>
         </label>
 
         <h2>Decryption Password</h2>
-        <input type="password" name="password" id="password" required>
+        <input type="password" name="password" id="password" required placeholder="Enter Decryption Password">
         
         <br><br>
         <input type="button" value="Decrypt" onclick="submitForm()">
+        <input id="reset" type="reset" value="Reset" onclick="hideEmbed(this)">
     </form>
 
     <div id="responseMessage"></div>
 
     <script>
+        function hideEmbed(button){
+            const embed = document.querySelector('embed');
+            if(embed){
+                embed.parentNode.removeChild(embed);
+            }
+
+            const responseMessage = document.querySelector('#responseMessage');
+            responseMessage.classList = "";
+            responseMessage.textContent = "";
+
+            const fileName = document.getElementById("file1" + 'Name');
+            fileName.textContent = "";
+        }
         
         // Function to handle form submission
         function submitForm() {
+            if (!document.getElementById('file1').files[0]) {
+                alert('Please add a file to decrypt.');
+                return;
+            }
 
             const formData = new FormData();
             formData.append('uploaded_file', document.getElementById('file1').files[0]);
@@ -72,7 +90,6 @@
                         document.body.appendChild(embed);
 
                         setTimeout(function() {
-                            console.log("Height after delay:", embed.clientHeight);
                             if (embed.clientHeight == 0){
                                 const a = document.createElement('a');
                                 a.href = url;
@@ -86,7 +103,11 @@
                                 a.click();
                                 window.URL.revokeObjectURL(url);
                             }
-                        }, 500); // 500 milliseconds = 0.5 seconds
+                            else{
+                                const embedReset = document.getElementById('reset');
+                                embedReset.style.display = "unset";
+                            }
+                        }, 200);
 
                         return 'File decrypted successfully!';
                     });

@@ -24,7 +24,7 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
-#### 3. Access the application in your web browser at ```http://localhost:8000```
+#### 3. Access the application in your web browser at ```http://localhost:8000/encrypt/```
 
 #### 4. Encryption
 - Click on the "Encrypt" option in the navigation bar.

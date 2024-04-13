@@ -30,13 +30,18 @@
         
         <br><br>
         <input type="button" value="Encrypt" onclick="submitForm()">
-        <input type="reset" value="Reset">
+        <input type="reset" value="Reset" onclick="resetForm()">
     </form>
 
     <div id="responseMessage"></div>
 
 
     <script>
+        function resetForm(){
+            const fileName = document.getElementById("file1" + 'Name');
+            fileName.textContent = "";
+        }
+
         function matchPassword() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
@@ -97,6 +102,10 @@
                 return;
             } else {
                 matchMessage.innerText = "";
+            }
+            if (!document.getElementById('file1').files[0]) {
+                alert('Please add a file to decrypt.');
+                return;
             }
 
             const formData = new FormData();
