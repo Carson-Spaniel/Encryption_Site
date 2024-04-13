@@ -67,7 +67,7 @@ def encrypt(file, aes_key):
 
     return response
 
-def decrypt_file(uploaded_file, aes_key):
+def decrypt(uploaded_file, aes_key):
     # Read the uploaded file content
     file_content = uploaded_file.read()
 

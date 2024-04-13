@@ -1,17 +1,253 @@
-<!-- upload_form.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>File Upload</title>
+    <title>File Decryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1, h2 {
+            color: #007bff;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="button"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 3px;
+        }
+
+        #responseMessage.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        #responseMessage.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        embed {
+            width: 100%;
+            height: 1000px; /* Adjust height as needed */
+        }
+
+        /* Drag and Drop Box Styles */
+        .drag-drop-box {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .drag-drop-box.highlight {
+            border-color: #007bff;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Upload a File</h1>
-    <form action="{% url 'decrypt_file' %}" method="post" enctype="multipart/form-data">
+    <h1>Decrypt a File</h1>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="uploaded_file">
+        
+        <!-- File Upload for the File to Decrypt -->
+        <h2>File to Decrypt</h2>
+
+        <input type="file" name="uploaded_file" id="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1')" ondragleave="handleDragLeave(event, 'file1')" ondrop="handleDrop(event, 'file1')">
+        <div id="file1Name"></div> <!-- This div will display uploaded file name -->
+
+        <h2>Decryption Password</h2>
+        <input type="password" name="password" id="password">
+        
         <br><br>
-        <input type="submit" value="Upload">
+        <input type="button" value="Decrypt" onclick="submitForm()">
     </form>
+
+    <div id="responseMessage"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Function to clear all input fields
+            function clearAllInputs() {
+                const fileInputs = document.querySelectorAll('input[type="file"]');
+                const passwordInput = document.getElementById('password');
+
+                // Clear file inputs
+                fileInputs.forEach(input => {
+                    input.value = ''; // Clear the value
+                    const fileNameDiv = document.getElementById(input.id + 'Name');
+                    if (fileNameDiv) {
+                        fileNameDiv.textContent = ''; // Clear displayed file name
+                    }
+                });
+
+                // Clear password input
+                if (passwordInput) {
+                    passwordInput.value = '';
+                }
+            }
+
+            // Call the function to clear inputs when the page loads
+            clearAllInputs();
+            console.log(document.getElementById('file1').files[0]);
+        });
+
+        // Function to handle drag over the drop box
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        // Function to handle drag enter the drop box
+        function handleDragEnter(event, id) {
+            document.getElementById(id).classList.add('highlight');
+        }
+
+        // Function to handle drag leave the drop box
+        function handleDragLeave(event, id) {
+            document.getElementById(id).classList.remove('highlight');
+        }
+
+        // Function to handle drop files onto the drop box
+        function handleDrop(event, id) {
+            event.preventDefault();
+            document.getElementById(id).classList.remove('highlight');
+
+            const files = event.dataTransfer.files;
+            handleFiles(files, id);
+        }
+
+        // Function to handle files selected from input
+        function handleFiles(files, id) {
+            if (files.length > 0) {
+                const inputField = document.getElementById(id);
+                inputField.files = files;
+
+                // Display file name
+                const fileNameDiv = document.getElementById(id + 'Name');
+                fileNameDiv.textContent = 'Selected File: ' + files[0].name;
+            }
+        }
+
+        // Function to handle form submission
+        function submitForm() {
+
+            const formData = new FormData();
+            formData.append('uploaded_file', document.getElementById('file1').files[0]);
+
+            const password = document.getElementById('password').value;
+
+            // Validate mutually exclusive fields
+            if (!password) {
+                alert('Please enter a password.');
+                return;
+            }
+
+            // Append key file or password based on selection
+            formData.append('password', password);
+
+            fetch('{% url "decrypt_file" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                // Check content-disposition header to decide whether to display or download
+                const contentDisposition = response.headers.get('content-disposition');
+                if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+                    // Display the decrypted file
+                    return response.blob().then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const embed = document.createElement('embed');
+                        embed.src = url;
+                        embed.type = 'application/octet-stream'; // Set correct MIME type if known
+                        document.body.appendChild(embed);
+
+                        const a = document.createElement('a');
+                        a.href = url;
+                        
+                        // Set the filename from response headers
+                        const filename = getFilenameFromHeaders(response.headers);
+                        a.download = filename;
+                        
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        return 'File decrypted successfully!';
+                    });
+                }
+            })
+            .then(message => {
+                document.getElementById('responseMessage').innerHTML = message;
+                document.getElementById('responseMessage').className = 'success';
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                document.getElementById('responseMessage').innerHTML = 'Error decrypting file. Please try again.';
+                document.getElementById('responseMessage').className = 'error';
+            });
+        }
+
+        // Helper function to get filename from headers
+        function getFilenameFromHeaders(headers) {
+            const contentDisposition = headers.get('content-disposition');
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
+                if (filenameMatch && filenameMatch.length > 1) {
+                    return filenameMatch[1];
+                }
+            }
+            return 'decrypted_file'; // Default filename
+        }
+    </script>
 </body>
 </html>
