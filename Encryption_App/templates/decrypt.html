@@ -28,20 +28,6 @@
     <div id="responseMessage"></div>
 
     <script>
-        function hideEmbed(button){
-            const embed = document.querySelector('embed');
-            if(embed){
-                embed.parentNode.removeChild(embed);
-            }
-
-            const responseMessage = document.querySelector('#responseMessage');
-            responseMessage.classList = "";
-            responseMessage.textContent = "";
-
-            const fileName = document.getElementById("file1" + 'Name');
-            fileName.textContent = "";
-        }
-        
         // Function to handle form submission
         function submitForm() {
             if (!document.getElementById('file1').files[0]) {
@@ -122,18 +108,6 @@
                 document.getElementById('responseMessage').innerHTML = 'Error decrypting file. Please try again.';
                 document.getElementById('responseMessage').className = 'error';
             });
-        }
-
-        // Helper function to get filename from headers
-        function getFilenameFromHeaders(headers) {
-            const contentDisposition = headers.get('content-disposition');
-            if (contentDisposition) {
-                const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
-                if (filenameMatch && filenameMatch.length > 1) {
-                    return filenameMatch[1];
-                }
-            }
-            return 'decrypted_file'; // Default filename
         }
     </script>
 </body>
