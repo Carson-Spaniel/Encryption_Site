@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .AES import AES_encrypt, AES_decrypt
+from .AES import AES_encrypt
 
 def encrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:

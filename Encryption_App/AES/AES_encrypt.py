@@ -61,40 +61,32 @@ def encrypt(file, aes_key):
     return response
 
 def decrypt(uploaded_file, aes_key):
-    # Read the uploaded file content
     file_content = uploaded_file.read()
 
-    # Split the file content into parts
     file_type_xor = file_content[:16]
     tag = file_content[16:32]
     nonce = file_content[32:47]
     ciphertext = file_content[47:]
 
     try:
-        # Decrypt the file type information
         file_type_xor = unpkcs_7(file_type_xor).decode()
     except ValueError:
-        return None  # Unable to decrypt file type
+        return None
 
-    # Derive the file extension
     file_extension = ''.join(chr(ord(file_type_xor[i]) ^ aes_key[i % len(aes_key)]) for i in range(len(file_type_xor)))
 
-    # Create an AES cipher object
     cipher = AES.new(aes_key, AES.MODE_OCB, nonce=nonce)
 
     try:
-        # Decrypt the file content
         decrypted_content = cipher.decrypt_and_verify(ciphertext, tag)
 
-        # Create a buffer with decrypted content
         buffer = io.BytesIO()
         buffer.write(decrypted_content)
         buffer.seek(0)
 
-        # Create a response with decrypted file
         response = FileResponse(buffer, as_attachment=True, filename=f"{str(uploaded_file).replace('_encrypted.bin', '')}{file_extension}")
 
         return response
 
     except ValueError:
-        return None  # Decryption failed
+        return None
