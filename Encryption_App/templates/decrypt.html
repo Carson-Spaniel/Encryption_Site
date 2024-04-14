@@ -4,7 +4,7 @@
 {% block content %}
 <body>
     
-    <form id="uploadForm" enctype="multipart/form-data">
+    <form id="uploadForm" enctype="multipart/form-data" onsubmit="submitForm()">
         {% csrf_token %}
         
         <!-- File Upload for the File to Decrypt -->
