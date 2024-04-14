@@ -81,7 +81,6 @@ input[type="button"]:hover {
     margin: 5px;
 }
 
-/* Drag and Drop Box Styles */
 .drag-drop-box {
     border: 2px dashed #ccc;
     padding: 20px;
@@ -133,4 +132,3 @@ nav ul li a:hover {
 meter{
     width: 100%;
 }
-
