@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login or Signup{% endblock %}
+
+{% block content %}
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+    </head>
+    <div class="login-signup-container">
+        <h1>Login or Signup</h1>
+        <div id="loginForm" class="form active">
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" name="password" required>
+
+                <input type="submit" value="Login">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </form>
+        </div>
+
+        <div id="signupForm" class="form">
+            <form action="{% url 'signup' %}" method="POST">
+                {% csrf_token %}
+                <label for="newUsername">New Username:</label>
+                <input type="text" id="newUsername" name="newUsername" required>
+
+                <label for="password">New Password:</label>
+                <input type="password" id="password" name="password" required onkeyup="checkPasswordStrength(this.value)">
+                <meter max="5" value="0" id="password-strength-meter"></meter>
+                <p id="password-strength-text"></p>
+
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required onkeyup="matchPassword()">
+                <div id="match"></div>
+
+                <input type="submit" value="Sign Up">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </form>
+        </div>
+
+        <p id="toggleLink" class="toggle-link">Don't have an account? <a href='#'>Sign up!</a></p>
+    </div>
+    <script src="{% static 'login.js' %}"></script>
+{% endblock %}

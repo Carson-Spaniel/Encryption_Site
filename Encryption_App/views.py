@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.models import User
 from .AES import AES_encrypt
+from .models import UserProfile
 
 def encrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
@@ -47,4 +51,44 @@ def decrypt_file(request):
         return response
 
     return render(request, 'decrypt.html')
+
+def login_page(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            messages.success(request, "Login successful.")
+            return redirect('home')  # Redirect to your home page after login
+        else:
+            messages.error(request, "Invalid username or password.")
+    return render(request, "login.html")
+
+def signup(request):
+    if request.method == "POST":
+        new_username = request.POST.get('newUsername')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('login_page')
+
+        # Check if the username already exists
+        if User.objects.filter(username=new_username).exists():
+            messages.error(request, "Username already exists.")
+            return redirect('login_page')
+
+        # Create the new user
+        new_user = User(username=new_username)
+        new_user.set_password(password)
+        new_user.save()
+
+        UserProfile.objects.create(user=new_user)
+
+        messages.success(request, "Account created successfully. You can now log in.")
+        return redirect('encrypt_file')
+
+    return render(request, "login.html")
 
