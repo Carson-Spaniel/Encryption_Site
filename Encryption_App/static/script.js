@@ -74,6 +74,11 @@ function hideEmbed(button){
         embed.parentNode.removeChild(embed);
     }
 
+    const download = document.querySelector('.download');
+    if(download){
+        download.parentNode.removeChild(download);
+    }
+
     const responseMessage = document.querySelector('#responseMessage');
     responseMessage.classList = "";
     responseMessage.textContent = "";

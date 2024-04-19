@@ -44,6 +44,10 @@ input[type="button"] {
     border-radius: 3px;
 }
 
+input[type="button"]:hover {
+    background-color: #0056b3;
+}
+
 input[type="reset"] {
     background-color: #be313f;
     color: #fff;
@@ -53,8 +57,21 @@ input[type="reset"] {
     border-radius: 3px;
 }
 
-input[type="button"]:hover {
-    background-color: #0056b3;
+input[type="reset"]:hover {
+    background-color: #8f2731;
+}
+
+.download {
+    background-color: #1a9d37;;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.download:hover {
+    background-color: #136e27;
 }
 
 #responseMessage {

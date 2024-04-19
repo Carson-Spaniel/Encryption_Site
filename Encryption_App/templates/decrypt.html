@@ -34,21 +34,21 @@
                 alert('Please add a file to decrypt.');
                 return;
             }
-
+    
             const formData = new FormData();
             formData.append('uploaded_file', document.getElementById('file1').files[0]);
-
+    
             const password = document.getElementById('password').value;
-
+    
             // Validate mutually exclusive fields
             if (!password) {
                 alert('Please enter a password.');
                 return;
             }
-
+    
             // Append key file or password based on selection
             formData.append('password', password);
-
+    
             fetch('{% url "decrypt_file" %}', {
                 method: 'POST',
                 body: formData,
@@ -60,7 +60,7 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-
+    
                 // Check content-disposition header to decide whether to display or download
                 const contentDisposition = response.headers.get('content-disposition');
                 if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
@@ -74,27 +74,27 @@
                         embed.src = url;
                         embed.type = 'application/octet-stream'; // Set correct MIME type if known
                         document.body.appendChild(embed);
+    
+                        // Set the filename from response headers
+                        const filename = getFilenameFromHeaders(response.headers);
+    
+                        // Create download button
+                        const downloadButton = document.createElement('button');
+                        downloadButton.textContent = 'Download';
+                        downloadButton.classList = 'download';
+                        downloadButton.onclick = function() {
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = filename;
+                            a.style.display = 'none';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        };
 
-                        setTimeout(function() {
-                            if (embed.clientHeight == 0){
-                                const a = document.createElement('a');
-                                a.href = url;
-                                
-                                // Set the filename from response headers
-                                const filename = getFilenameFromHeaders(response.headers);
-                                a.download = filename;
-                                
-                                a.style.display = 'none';
-                                document.body.appendChild(a);
-                                a.click();
-                                window.URL.revokeObjectURL(url);
-                            }
-                            else{
-                                const embedReset = document.getElementById('reset');
-                                embedReset.style.display = "unset";
-                            }
-                        }, 200);
-
+                        const form = document.querySelector('form');
+                        form.appendChild(downloadButton);
+    
                         return 'File decrypted successfully!';
                     });
                 }
@@ -109,7 +109,7 @@
                 document.getElementById('responseMessage').className = 'error';
             });
         }
-    </script>
+    </script>    
 </body>
 
 {% endblock %}
