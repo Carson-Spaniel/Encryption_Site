@@ -9,6 +9,8 @@ class UserProfile(models.Model):
     public_key = models.TextField(blank=True, null=True)
     private_key = models.TextField(blank=True, null=True)
 
+    passwordsJson = models.TextField(blank=True, null=True)
+
     def save(self, *args, **kwargs):
         # Generate RSA key pair if new user and keys are not set
         if not self.pk and (not self.public_key or not self.private_key):
