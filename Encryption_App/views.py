@@ -60,7 +60,7 @@ def login_page(request):
         if user is not None:
             auth_login(request, user)
             messages.success(request, "Login successful.")
-            return redirect('encrypt_file')  # Redirect to your home page after login
+            return redirect('encrypt_file')
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, "login.html")
