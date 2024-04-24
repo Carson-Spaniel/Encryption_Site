@@ -12,9 +12,20 @@ class UserProfile(models.Model):
     passwordsJson = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        password = self.user.password.split('$')[-1][0:31]
+        print(password)
+        print(len(password))
         # Generate RSA key pair if new user and keys are not set
         if not self.pk and (not self.public_key or not self.private_key):
             pub_key, priv_key = self.generate_rsa_keypair()
+
+            '''
+                1. Get password of user
+                2. Hash the password using SHA 256
+                3. Encrypt the data using AES with the hashed password as the key
+                4. Save encrypted data to designated areas                
+            '''
+
             self.public_key = pub_key.decode()
             self.private_key = priv_key.decode()
         super().save(*args, **kwargs)
