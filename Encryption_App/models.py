@@ -20,7 +20,7 @@ class UserProfile(models.Model):
         sha256.update(self.user.password.split('$')[-1][0:32].encode('utf-8'))
         aes_key = sha256.digest()
         cipher = AES.new(aes_key, AES.MODE_OCB)
-        print(f'\n\n\n',self.passwordsJson, f'\n\n\n')
+        # print(f'\n\n\n',self.passwordsJson, f'\n\n\n')
         passwordsCiphertext, tag = cipher.encrypt_and_digest(self.passwordsJson)
 
         self.passwordsJson = tag + passwordsCiphertext
