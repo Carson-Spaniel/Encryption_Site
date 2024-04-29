@@ -21,7 +21,7 @@ class UserProfile(models.Model):
         aes_key = sha256.digest()
         cipher = AES.new(aes_key, AES.MODE_OCB)
         print(f'\n\n\n',self.passwordsJson, f'\n\n\n')
-        passwordsCiphertext, tag = cipher.encrypt_and_digest(self.passwordsJson)
+        passwordsCiphertext, tag = cipher.encrypt_and_digest(self.passwordsJson.encode('utf-8'))
 
         self.passwordsJson = tag + passwordsCiphertext
         self.nonce = cipher.nonce
