@@ -30,7 +30,6 @@ def unpkcs_7(padded_text):
     return padded_text[:-pad_byte]
 
 def encrypt(file, aes_key):
-
     file_info = str(file).split('.')
     file_extension = '.'+file_info[1]
     file_name = str(file).replace(file_extension, '')
@@ -62,7 +61,7 @@ def encrypt(file, aes_key):
 
 def decrypt(uploaded_file, aes_key):
     file_content = uploaded_file.read()
-
+    
     file_type_xor = file_content[:16]
     tag = file_content[16:32]
     nonce = file_content[32:47]
