@@ -1,0 +1,15 @@
+{
+  "name": "loading",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "Carson Spaniel",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^30.0.6"
+  }
+}
