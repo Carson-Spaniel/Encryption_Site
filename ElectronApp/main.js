@@ -9,10 +9,11 @@ function createWindow() {
     width: 800,
     height: 600,
     show: false, // Don't show the main window until it's ready
-    icon: path.join(__dirname, 'ElectronApp/company_images/secureit.png'),
+    icon: path.join(__dirname, 'company_images/secureit.png'),
     webPreferences: {
       sandbox: true,
       contextIsolation: true,
+      devTools: true,
     },
   });
 
@@ -37,8 +38,8 @@ function createWindow() {
   //   mainWindow.webContents.closeDevTools();
   // });
 
-  // // Remove the application menu
-  // Menu.setApplicationMenu(null);
+  // Remove the application menu
+  Menu.setApplicationMenu(null);
 
   // Show the main window once it's ready
   mainWindow.once('ready-to-show', () => {

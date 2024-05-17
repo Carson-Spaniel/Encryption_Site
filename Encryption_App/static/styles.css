@@ -197,13 +197,13 @@ body.dark-mode input[type="file"] {
     border: 1px solid #555;
 }
 
-body.dark-mode nav ul {
+/* body.dark-mode nav ul {
     background-color: #444;
-}
+} */
 
-body.dark-mode nav ul li a:hover, body.dark-mode #themeToggle:hover {
+/* body.dark-mode nav ul li a:hover, body.dark-mode #themeToggle:hover {
     background-color: #666;
-}
+} */
 
 body.dark-mode .drag-drop-box {
     border-color: #1e90ff;
@@ -291,8 +291,9 @@ nav svg path{
     transform: translateX(25%) scale(.2);
     z-index: 10;
     position: relative;
+    transition: all 0.3s;
 }
 
 nav.hidden svg path{
-    transform: translateX(0%) scale(.1);
+    transform: translate(0%, 25%) scale(.1);
 }
