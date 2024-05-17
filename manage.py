@@ -17,7 +17,6 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     webbrowser.open('http://localhost:8000/')
-    print(sys.argv)
     execute_from_command_line(sys.argv)
     
 

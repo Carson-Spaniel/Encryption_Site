@@ -1,27 +1,99 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
     <head>
         <title>{% block title %}{% endblock %}AES</title>
-
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">    
+        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
     </head>
     <body>
-
-        <nav>
-            <ul>
-                <!-- <li><a href="/login">Login</a></li> -->
-                <li><a href="/encrypt">Encrypt</a></li>
-                <li><a href="/decrypt">Decrypt</a></li>
-            </ul>
-        </nav>
-        
-        <main class="main">
-            {% block content %}{% endblock %}
-        </main>
-
+        <div class="container">
+            <nav>
+                <div class="fullNavButtons">
+                    <ul>
+                        <li><a href="/encrypt">Encrypt</a></li>
+                        <li><a href="/decrypt">Decrypt</a></li>
+                        <li><a href="/decrypt">Passwords</a></li>
+                    </ul>
+                </div>
+                <div class="hiddenNavButtons">
+                    <ul>
+                        <li><a href="/encrypt">E</a></li>
+                        <li><a href="/decrypt">D</a></li>
+                        <li><a href="/decrypt">P</a></li>
+                    </ul>
+                </div>
+                <div class="buttons">
+                    <button id="themeToggle"></button>
+                    <button id="hideNav"><</button>
+                </div>
+                
+            </nav>
+            <main class="main">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
         <script src="{% static 'script.js' %}"></script>
     </body>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navToggle = document.getElementById("hideNav");
+            const nav = document.querySelector("nav");
+            const bottomButtons = document.querySelector(".buttons");
+            const hiddenButtons = document.querySelector(".hiddenNavButtons");
+            const fullButtons = document.querySelector(".fullNavButtons");
+            const themeToggle = document.getElementById("themeToggle");
+
+            // Check the cookie for the nav state
+            const navState = getCookie("navState") || "shown";
+            if (navState === "hidden") {
+                nav.classList.add("hidden");
+                navToggle.classList.add("hidden");
+                bottomButtons.classList.add("hidden");
+                hiddenButtons.classList.add("hidden");
+                fullButtons.classList.add("hidden");
+            }
+
+            navToggle.addEventListener("click", () => {
+                const isHidden = nav.classList.toggle("hidden");
+                navToggle.classList.toggle("hidden");
+                bottomButtons.classList.toggle("hidden");
+                hiddenButtons.classList.toggle("hidden");
+                fullButtons.classList.toggle("hidden");
+                
+                setCookie("navState", isHidden ? "hidden" : "shown", 30);
+            });
+
+            // Check the cookie for the theme state
+            const currentTheme = getCookie("theme") || "light";
+            if (currentTheme === "dark") {
+                document.body.classList.add("dark-mode");
+            }
+
+            themeToggle.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                const newTheme = document.body.classList.contains("dark-mode") ? "dark" : "light";
+                setCookie("theme", newTheme, 30);
+            });
+
+            function setCookie(name, value, days) {
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                document.cookie = `${name}=${value};${expires};path=/`;
+            }
+
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+        });
+    </script>
 </html>

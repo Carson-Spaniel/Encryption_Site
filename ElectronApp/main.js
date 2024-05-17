@@ -1,10 +1,15 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const { spawn } = require('child_process');
 
+let mainWindow;
+let splash;
+
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  // Create the main window
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    // show: false, // Don't show the main window until it's ready
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -13,38 +18,57 @@ function createWindow() {
 
   mainWindow.loadURL('http://localhost:8000');
 
+  // Handle allowed navigation
   const allowedEndpoints = [
     'http://localhost:8000/',
-    // 'http://localhost:8000/login',
-    // 'http://localhost:8000/signup',
     'http://localhost:8000/encrypt',
     'http://localhost:8000/decrypt',
   ];
   
   mainWindow.webContents.on('will-navigate', (event, url) => {
-    // Check if the URL matches any of the allowed endpoints
     const isAllowed = allowedEndpoints.some(endpoint => url.startsWith(endpoint));
-    
-    // If the URL is not in the list of allowed endpoints, prevent navigation
     if (!isAllowed) {
       event.preventDefault();
     }
   });
 
-  // Disable DevTools
-  mainWindow.webContents.on('devtools-opened', () => {
-    mainWindow.webContents.closeDevTools();
+  // // Disable DevTools
+  // mainWindow.webContents.on('devtools-opened', () => {
+  //   mainWindow.webContents.closeDevTools();
+  // });
+
+  // Remove the application menu
+  Menu.setApplicationMenu(null);
+
+  // Show the main window once it's ready
+  mainWindow.once('ready-to-show', () => {
+    splash.close();
+    mainWindow.show();
   });
 }
 
-app.on('ready', createWindow);
+function createSplash() {
+  splash = new BrowserWindow({
+    width: 300,
+    height: 200,
+    frame: false,
+    alwaysOnTop: true,
+    transparent: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  splash.loadFile('splash.html');
+}
+
+app.on('ready', () => {
+  createSplash();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    const serverProcess = spawn('taskkill', ['/f', '/im', 'python.exe', '/t']);
-    serverProcess.on('close', () => {
-      console.log('Django server closed.');
-    });
     app.quit();
   }
 });
@@ -54,11 +78,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-// // Ensure that the Django server is closed when Electron exits
-// app.on('will-quit', () => {
-//   const serverProcess = spawn('taskkill', ['/f', '/im', 'python.exe', '/t']);
-//   serverProcess.on('close', () => {
-//     console.log('Django server closed.');
-//   });
-// });

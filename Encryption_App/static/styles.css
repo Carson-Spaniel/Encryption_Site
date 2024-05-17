@@ -1,10 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f8f9fa;
+    margin: 0;
+    background-color: #f4f4f4;
     color: #333;
-    max-width: 1200px;
 }
 
 h1, h2 {
@@ -117,10 +115,6 @@ embed{
     margin: 10px auto;
 }
 
-nav {
-    margin-bottom: 20px;
-}
-
 nav ul {
     list-style-type: none;
     padding: 0;
@@ -128,24 +122,158 @@ nav ul {
     display: flex;
     justify-content: center;
     background-color: #007bff;
-}
-
-nav ul li {
-    margin-right: 10px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 3px;
-    display: inline-block;
-}
-
-nav ul li a:hover {
-    background-color: #0056b3;
+    flex-direction: column;
 }
 
 meter{
     width: 100%;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+nav {
+    width: 200px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s;
+}
+
+nav ul li {
+    text-align: center;
+    margin: 0;
+}
+
+nav ul li button{
+    width: 100%;
+}
+
+nav ul li a, nav ul li button {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    transition: background-color 0.3s;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+}
+
+nav ul li a:hover, nav ul li button:hover {
+    background-color: #575757;
+}
+
+.main {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+body.dark-mode {
+    background-color: #2b2b2b;
+    color: #f4f4f4;
+}
+
+body.dark-mode h1, body.dark-mode h2 {
+    color: #1e90ff;
+}
+
+body.dark-mode form {
+    background-color: #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode input[type="password"],
+body.dark-mode input[type="file"] {
+    border: 1px solid #555;
+}
+
+body.dark-mode nav ul {
+    background-color: #444;
+}
+
+body.dark-mode nav ul li a:hover, body.dark-mode #themeToggle:hover {
+    background-color: #666;
+}
+
+body.dark-mode .drag-drop-box {
+    border-color: #1e90ff;
+}
+
+body.dark-mode #responseMessage.success {
+    background-color: #2e8b57;
+    color: #f4f4f4;
+}
+
+body.dark-mode #responseMessage.error, body.dark-mode .not-match {
+    background-color: #a52a2a;
+    color: #f4f4f4;
+}
+
+body.dark-mode nav {
+    background-color: #222;
+}
+
+body.dark-mode .main {
+    background-color: #2b2b2b;
+}
+
+.buttons button{
+    position: relative;
+    bottom: 0px;
+    background-color: #007bff;
+    border: none;
+    padding: 20px;
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transition: all 0.3s;
+    margin: 0 auto;
+}
+
+.buttons button:hover {
+    background-color: #575757;
+}
+
+.buttons{
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.hiddenNavButtons{
+    display: none;
+}
+
+.hiddenNavButtons.hidden{
+    display: block;
+}
+
+.fullNavButtons.hidden{
+    display: none;
+}
+
+.buttons.hidden{
+    flex-direction: column;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 10px
+}
+
+.buttons.hidden button{
+    width: 30px;
+    transition: all 0.0s;
+}
+
+nav.hidden {
+    width: 50px;
+    transition: all 0.0s;
 }
