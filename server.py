@@ -13,9 +13,12 @@ ELECTRON_APP_PATH = os.path.join(os.path.dirname(__file__), 'ElectronApp')
 def start_electron():
     try:
         print('Opening Secure Browser Window')
-        print(f'Electron Path: {ELECTRON_APP_PATH}')
-        npm_path = 'npm.cmd'  # Using npm.cmd for Windows
-        electron_process = subprocess.Popen([npm_path, 'start'], cwd=ELECTRON_APP_PATH)
+        # print(f'Electron App Path: {ELECTRON_APP_PATH}')
+        # Replace 'electron' with the path to your Electron executable
+        electron_path = os.path.join(ELECTRON_APP_PATH, 'node_modules', 'electron', 'dist', 'electron.exe')
+
+        # print(f'Electron Path: {electron_path}')
+        electron_process = subprocess.Popen([electron_path, ELECTRON_APP_PATH])
         electron_process.wait()  # Wait for Electron process to finish
         print('Electron process has ended.')
     except Exception as exc:
