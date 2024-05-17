@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Menu } = require('electron');
-const { spawn } = require('child_process');
+const path = require('path');
 
 let mainWindow;
 
@@ -9,6 +9,7 @@ function createWindow() {
     width: 800,
     height: 600,
     show: false, // Don't show the main window until it's ready
+    icon: path.join(__dirname, 'ElectronApp/company_images/secureit.png'),
     webPreferences: {
       sandbox: true,
       contextIsolation: true,
