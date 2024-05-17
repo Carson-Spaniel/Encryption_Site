@@ -1,4 +1,61 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const navToggle = document.getElementById("hideNav");
+    const nav = document.querySelector("nav");
+    const bottomButtons = document.querySelector(".buttons");
+    const hiddenButtons = document.querySelector(".hiddenNavButtons");
+    const fullButtons = document.querySelector(".fullNavButtons");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // Check the cookie for the nav state
+    const navState = getCookie("navState") || "shown";
+    if (navState === "hidden") {
+        nav.classList.add("hidden");
+        navToggle.classList.add("hidden");
+        bottomButtons.classList.add("hidden");
+        hiddenButtons.classList.add("hidden");
+        fullButtons.classList.add("hidden");
+    }
+
+    navToggle.addEventListener("click", () => {
+        const isHidden = nav.classList.toggle("hidden");
+        navToggle.classList.toggle("hidden");
+        bottomButtons.classList.toggle("hidden");
+        hiddenButtons.classList.toggle("hidden");
+        fullButtons.classList.toggle("hidden");
+        
+        setCookie("navState", isHidden ? "hidden" : "shown", 30);
+    });
+
+    // Check the cookie for the theme state
+    const currentTheme = getCookie("theme") || "light";
+    if (currentTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+
+    themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        const newTheme = document.body.classList.contains("dark-mode") ? "dark" : "light";
+        setCookie("theme", newTheme, 30);
+    });
+
+    function setCookie(name, value, days) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = `${name}=${value};${expires};path=/`;
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
     // Function to clear all input fields
     function clearAllInputs() {
         const fileInputs = document.querySelectorAll('input[type="file"]');

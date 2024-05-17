@@ -39,7 +39,7 @@ function createWindow() {
   // });
 
   // Remove the application menu
-  Menu.setApplicationMenu(null);
+  // Menu.setApplicationMenu(null);
 
   // Show the main window once it's ready
   mainWindow.once('ready-to-show', () => {
