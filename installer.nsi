@@ -20,7 +20,7 @@ InstallDir "$PROGRAMFILES\SecureIt"
 
 Section "Install"
 SetOutPath $INSTDIR
-File /r "dist\*"  ; Include all files and directories in the dist folder
+File /r "dist\SecureIt\*"  ; Include all files and directories in the dist folder
 
 ; Create Start menu shortcut
 CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\server.exe"
