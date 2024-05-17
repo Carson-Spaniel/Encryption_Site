@@ -2,16 +2,15 @@ const { app, BrowserWindow, Menu } = require('electron');
 const { spawn } = require('child_process');
 
 let mainWindow;
-let splash;
 
 function createWindow() {
   // Create the main window
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    // show: false, // Don't show the main window until it's ready
+    show: false, // Don't show the main window until it's ready
     webPreferences: {
-      nodeIntegration: false,
+      sandbox: true,
       contextIsolation: true,
     },
   });
@@ -37,33 +36,16 @@ function createWindow() {
   //   mainWindow.webContents.closeDevTools();
   // });
 
-  // Remove the application menu
-  Menu.setApplicationMenu(null);
+  // // Remove the application menu
+  // Menu.setApplicationMenu(null);
 
   // Show the main window once it's ready
   mainWindow.once('ready-to-show', () => {
-    splash.close();
     mainWindow.show();
   });
 }
 
-function createSplash() {
-  splash = new BrowserWindow({
-    width: 300,
-    height: 200,
-    frame: false,
-    alwaysOnTop: true,
-    transparent: true,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
-
-  splash.loadFile('splash.html');
-}
-
 app.on('ready', () => {
-  createSplash();
   createWindow();
 });
 
