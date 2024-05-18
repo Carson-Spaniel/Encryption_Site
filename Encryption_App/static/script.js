@@ -174,10 +174,10 @@ function checkPasswordStrength(password) {
     const meter = document.getElementById('password-strength-meter');
 
     let score = 0;
-    if (password.length >= 8) {
+    if (password.length >= 1) {
         score++;
     }
-    if (password.length >= 16) {
+    if (password.length >= 8) {
         score++;
     }
     if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
