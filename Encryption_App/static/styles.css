@@ -111,7 +111,7 @@ input[type="reset"]:hover {
     cursor: pointer;
     border-radius: 5px;
     margin-bottom: 10px;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .drag-drop-box.highlight {
@@ -132,7 +132,8 @@ nav ul {
     justify-content: center;
     background-color: #007bff;
     flex-direction: column;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
+    overflow: hidden;
 }
 
 meter{
@@ -185,17 +186,7 @@ ul li a:hover, nav ul li button:hover {
 }
 
 body.dark-mode ul li a:hover {
-    background-color: #575757;
-}
-
-nav ul li:first-child a:hover {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-nav ul li:last-child a:hover {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    background-color: #383838;
 }
 
 .main {
@@ -257,18 +248,24 @@ body.dark-mode .main {
     width: 50px;
     aspect-ratio: 1;
     border-radius: 50%;
-    transition: all 0.3s;
+    transition: background-color 0.1s;
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .buttons button:hover {
-    background-color: #575757;
+    background-color: white;
+}
+
+body.dark-mode .buttons button:hover {
+    background-color: #383838;
 }
 
 .buttons{
     display: flex;
     justify-content: space-around;
     padding: 20px;
+    transition: background-color 0.1s;
 }
 
 .fullNavButtons.hidden span{
@@ -278,11 +275,6 @@ body.dark-mode .main {
 .fullNavButtons.hidden a{
     padding: 15px 0;
 }
-
-/* .fullNavButtons.hidden>svg{
-    transform: translate(-50%,0%) scale(.8);
-    overflow: visible;
-} */
 
 .buttons.hidden{
     flex-direction: column;
@@ -295,6 +287,7 @@ body.dark-mode .main {
 .buttons.hidden button{
     width: 30px;
     transition: all 0.0s;
+    transition: background-color 0.1s;;
 }
 
 nav.hidden {
@@ -344,4 +337,31 @@ nav a span {
 nav a{
     height: 30px;
     overflow: hidden;
+}
+
+.buttons svg{
+    width: 35px;
+    height: 35px;
+    display: block;
+    transform: scale(6) translate(9%, 34%);
+}
+
+.buttons.hidden svg{
+    transform: scale(5) translate(5.3%, 30%);
+}
+
+.buttons #hideNav svg{
+    transform: scale(6) translate(-44%, -23.5%) rotate(135deg)
+}
+
+.buttons.hidden #hideNav svg{
+    transform: scale(6) translate(30.5%, 9.5%) rotate(-45deg)
+}
+
+.buttons svg path{
+    fill: white;
+}
+
+.buttons button:hover svg path{
+    fill: #007bff;
 }
