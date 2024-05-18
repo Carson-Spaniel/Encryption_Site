@@ -172,16 +172,6 @@ function matchPassword() {
 
 function checkPasswordStrength(password) {
     const meter = document.getElementById('password-strength-meter');
-    const text = document.getElementById('password-strength-text');
-
-    const strength = {
-        0: "Worst",
-        1: "Bad",
-        2: "Weak",
-        3: "Good",
-        4: "Strong",
-        5: "Strong"
-    };
 
     let score = 0;
     if (password.length >= 8) {
@@ -201,7 +191,6 @@ function checkPasswordStrength(password) {
     }
 
     meter.value = score;
-    text.innerHTML = strength[score];
 }
 
 // Helper function to get filename from headers

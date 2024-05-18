@@ -4,7 +4,15 @@
     font-display: swap;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
 body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
     font-family: poppins, sans-serif;
     margin: 0;
     background-color: #f4f4f4;
@@ -23,7 +31,7 @@ form {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: calc(100% - 40px)
+    /* height: calc(100% - 40px) */
 }
 
 label {
@@ -106,7 +114,7 @@ input[type="reset"]:hover {
 
 .drag-drop-box {
     border: 2px dashed #ccc;
-    padding: 18px;
+    padding: 15px;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
@@ -195,7 +203,8 @@ body.dark-mode ul li a:hover {
     background-color: #f4f4f4;
     margin: 0 auto;
     max-width: 1200px;
-    overflow: hidden;
+    overflow-y: scroll;
+    height: calc(100vh - 40px);
 }
 
 body.dark-mode {
