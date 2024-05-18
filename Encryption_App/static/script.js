@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const isHidden = nav.classList.toggle("hidden");
         navToggle.classList.toggle("hidden");
         bottomButtons.classList.toggle("hidden");
-        hiddenButtons.classList.toggle("hidden");
+        // hiddenButtons.classList.toggle("hidden");
         fullButtons.classList.toggle("hidden");
         
         setCookie("navState", isHidden ? "hidden" : "shown", 30);

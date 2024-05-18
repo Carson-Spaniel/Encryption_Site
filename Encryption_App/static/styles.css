@@ -252,7 +252,7 @@ body.dark-mode .main {
     display: block;
 }
 
-.fullNavButtons.hidden{
+.fullNavButtons.hidden span{
     display: none;
 }
 
