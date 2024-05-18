@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const main = document.querySelector("main");
+
+    document.addEventListener('mouseenter', () => {
+        main.style.filter = `blur(0px)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        main.style.filter = `blur(30px)`;
+    });
+
     const navToggle = document.getElementById("hideNav");
     const nav = document.querySelector("nav");
     const bottomButtons = document.querySelector(".buttons");

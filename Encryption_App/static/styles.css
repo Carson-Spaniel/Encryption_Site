@@ -143,6 +143,8 @@ nav {
     flex-direction: column;
     justify-content: space-between;
     transition: all 0.3s;
+    position: relative;
+    z-index: 10;
 }
 
 nav ul li {
@@ -196,14 +198,6 @@ body.dark-mode input[type="password"],
 body.dark-mode input[type="file"] {
     border: 1px solid #555;
 }
-
-/* body.dark-mode nav ul {
-    background-color: #444;
-} */
-
-/* body.dark-mode nav ul li a:hover, body.dark-mode #themeToggle:hover {
-    background-color: #666;
-} */
 
 body.dark-mode .drag-drop-box {
     border-color: #1e90ff;

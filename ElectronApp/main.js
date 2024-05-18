@@ -63,23 +63,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-app.on('browser-window-blur', () => {
-  if (mainWindow) {
-    mainWindow.webContents.insertCSS(`
-      body {
-        filter: blur(10px);
-      }
-    `);
-  }
-});
-
-app.on('browser-window-focus', () => {
-  if (mainWindow) {
-    mainWindow.webContents.insertCSS(`
-      body {
-        filter: blur(0px);
-      }
-    `);
-  }
-});
