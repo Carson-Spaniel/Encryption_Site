@@ -56,11 +56,18 @@
             const matchMessage = document.getElementById('match');
 
             // Check if passwords match
-            if (password !== confirmPassword) {
-                matchMessage.innerText = "Passwords do not match.";
+            if (websiteName && username && password && confirmPassword){
+                if (password !== confirmPassword) {
+                    matchMessage.innerText = "Passwords do not match.";
+                    return;
+                } else {
+                    matchMessage.innerText = "";
+                }
+            }
+            else {
+                document.getElementById('responseMessage').innerHTML = 'Please fill in all fields.';
+                document.getElementById('responseMessage').className = 'error';
                 return;
-            } else {
-                matchMessage.innerText = "";
             }
 
             const formData = new FormData();
