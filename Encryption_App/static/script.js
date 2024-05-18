@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const navToggle = document.getElementById("hideNav");
     const nav = document.querySelector("nav");
     const bottomButtons = document.querySelector(".buttons");
-    const hiddenButtons = document.querySelector(".hiddenNavButtons");
     const fullButtons = document.querySelector(".fullNavButtons");
     const themeToggle = document.getElementById("themeToggle");
 
@@ -22,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
         nav.classList.add("hidden");
         navToggle.classList.add("hidden");
         bottomButtons.classList.add("hidden");
-        hiddenButtons.classList.add("hidden");
         fullButtons.classList.add("hidden");
     }
 
@@ -30,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const isHidden = nav.classList.toggle("hidden");
         navToggle.classList.toggle("hidden");
         bottomButtons.classList.toggle("hidden");
-        // hiddenButtons.classList.toggle("hidden");
         fullButtons.classList.toggle("hidden");
         
         setCookie("navState", isHidden ? "hidden" : "shown", 30);
