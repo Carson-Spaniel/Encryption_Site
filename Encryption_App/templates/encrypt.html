@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<head>
+    <style>
+        body.dark-mode #encrypt {
+            background-color: #575757;
+        }
+
+        #encrypt {
+            background-color: white;
+        }
+
+        #encrypt svg path {
+            fill: #007bff;
+        }
+
+        #encrypt span{
+            color: #007bff;
+            font-weight: 900;
+        }
+    </style>
+</head>
 <body>
     <form id="uploadForm" enctype="multipart/form-data" onsubmit="submitForm()">
         {% csrf_token %}

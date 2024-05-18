@@ -1,5 +1,11 @@
+@font-face {
+    font-family: 'poppins';
+    src: url("fonts/Poppins-Regular.ttf") format("opentype");
+    font-display: swap;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: poppins, sans-serif;
     margin: 0;
     background-color: #f4f4f4;
     color: #333;
@@ -9,6 +15,7 @@ h1, h2 {
     color: #007bff;
     margin-top: 0;
     margin-bottom: 5px;
+    font-size: 20px;
 }
 
 form {
@@ -24,7 +31,7 @@ label {
     margin-bottom: 5px;
 }
 
-input[type="password"],
+input[type="text"], input[type="password"],
 input[type="file"] {
     width: calc(100% - 0px);
     padding: 10px;
@@ -99,11 +106,12 @@ input[type="reset"]:hover {
 
 .drag-drop-box {
     border: 2px dashed #ccc;
-    padding: 20px;
+    padding: 18px;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
     margin-bottom: 10px;
+    font-size: 15px;
 }
 
 .drag-drop-box.highlight {
@@ -124,6 +132,7 @@ nav ul {
     justify-content: center;
     background-color: #007bff;
     flex-direction: column;
+    border-radius: 5px;
 }
 
 meter{
@@ -161,7 +170,7 @@ nav ul li a, nav ul li button {
     color: white;
     text-decoration: none;
     padding: 15px;
-    transition: background-color 0.3s;
+    transition: background-color 0.1s;
     background: transparent;
     border: none;
     font-size: 15px;
@@ -169,8 +178,24 @@ nav ul li a, nav ul li button {
     align-items: center;
 }
 
-nav ul li a:hover, nav ul li button:hover {
+ul li a:hover, nav ul li button:hover {
+    background-color: white;
+    color: #007bff;
+    font-weight: 900;
+}
+
+body.dark-mode ul li a:hover {
     background-color: #575757;
+}
+
+nav ul li:first-child a:hover {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+nav ul li:last-child a:hover {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .main {
@@ -246,14 +271,6 @@ body.dark-mode .main {
     padding: 20px;
 }
 
-.hiddenNavButtons{
-    display: none;
-}
-
-.hiddenNavButtons.hidden{
-    display: block;
-}
-
 .fullNavButtons.hidden span{
     display: none;
 }
@@ -261,6 +278,11 @@ body.dark-mode .main {
 .fullNavButtons.hidden a{
     padding: 15px 0;
 }
+
+/* .fullNavButtons.hidden>svg{
+    transform: translate(-50%,0%) scale(.8);
+    overflow: visible;
+} */
 
 .buttons.hidden{
     flex-direction: column;
@@ -291,20 +313,23 @@ nav svg path{
     transform: translateX(25%) scale(.2);
     z-index: 10;
     position: relative;
-    transition: all 0.3s;
-}
-
-nav.hidden .fullNavButtons>svg path{
-    transform: translate(0%, 25%) scale(.1);
+    transition: all 0.1s;
 }
 
 nav a svg {
     width: 50px;
     height: 50px;
+    position: relative;
+    transform: scale(3);
+    left: 0px;
+    top: 60px;
+}
+
+nav.hidden a svg{
+    left: 46%;
 }
 
 nav ul svg path {
-    transform: translate(0%, 0%) scale(.1);
     fill: white;
 }
 
@@ -314,4 +339,9 @@ nav ul a:hover svg path {
 
 nav a span {
     text-wrap: nowrap;
+}
+
+nav a{
+    height: 30px;
+    overflow: hidden;
 }

@@ -11,7 +11,7 @@ function createWindow() {
     minWidth: 650,
     minHeight: 600,
     show: false, // Don't show the main window until it's ready
-    icon: path.join(__dirname, 'company_images/secureit.png'),
+    icon: path.join(__dirname, 'company_images/secureit_favicon.png'),
     webPreferences: {
       sandbox: true,
       contextIsolation: true,

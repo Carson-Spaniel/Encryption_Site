@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<head>
+    <style>
+        body.dark-mode #add-password {
+            background-color: #575757;
+        }
+
+        #add-password {
+            background-color: white;
+        }
+
+        #add-password svg path {
+            fill: #007bff;
+        }
+
+        #add-password span{
+            color: #007bff;
+            font-weight: 900;
+        }
+    </style>
+</head>
 <body>
     <form id="uploadForm" enctype="multipart/form-data" onsubmit="submitForm()">
         {% csrf_token %}
