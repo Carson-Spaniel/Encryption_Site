@@ -43,3 +43,11 @@ python manage.py runserver
 - Secure Key Generation: AES 256 keys are securely generated from SHA256-hashed passwords.
 - Transport Security: Ensure the application is served over HTTPS for secure data transmission.
 
+## Making into an exe file
+
+Run this script below to create the exe.
+```
+pyinstaller --noconsole --name SecureIt --add-data "ElectronApp;ElectronApp"
+ --add-data "Encryption_App;Encryption_App" --hidden-import=django server.py
+ ```
+
