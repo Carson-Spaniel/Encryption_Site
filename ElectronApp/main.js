@@ -23,6 +23,8 @@ function createWindow() {
   // Handle allowed navigation
   const allowedEndpoints = [
     'http://localhost:8000/',
+    'http://localhost:8000/passwords',
+    'http://localhost:8000/add-password',
     'http://localhost:8000/encrypt',
     'http://localhost:8000/decrypt',
   ];

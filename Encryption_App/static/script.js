@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener('mouseleave', () => {
-        main.style.filter = `blur(30px)`;
+        main.style.filter = `blur(15px)`;
     });
 
     const navToggle = document.getElementById("hideNav");

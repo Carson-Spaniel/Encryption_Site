@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from .AES import AES_encrypt
 from .models import UserProfile
+from django.http import JsonResponse
 
 def encrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
@@ -51,6 +52,30 @@ def decrypt_file(request):
         return response
 
     return render(request, 'decrypt.html')
+
+def passwords_page(request):
+    return render(request, "passwords.html")
+
+def add_password_page(request):
+    if request.method == 'POST':
+        required_fields = ['websiteName', 'username', 'password', 'confirm_password']
+        missing_fields = [field for field in required_fields if field not in request.POST]
+
+        if missing_fields:
+            return JsonResponse({'error': f"Missing fields: {', '.join(missing_fields)}"}, status=400)
+
+        websiteName = request.POST['websiteName']
+        username = request.POST['username']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            # Here you should handle saving the password or whatever you need to do with it
+            return JsonResponse({websiteName: [username, password]}, status=200)
+        else:
+            return JsonResponse({'error': 'Passwords do not match.'}, status=400)
+
+    return render(request, "addPass.html")
 
 def login_page(request):
     if request.method == "POST":
