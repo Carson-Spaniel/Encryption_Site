@@ -111,7 +111,8 @@
                         };
 
                         const form = document.querySelector('form');
-                        form.appendChild(downloadButton);
+                        const responseMessageDiv = document.getElementById('responseMessage');
+                        form.insertBefore(downloadButton, responseMessageDiv);
     
                         return 'File decrypted successfully!';
                     });

@@ -6,11 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return window.getComputedStyle(nav).getPropertyValue('display') !== 'none';
     }
 
-    console.log(isNavVisible());
-
     // Add event listeners only if nav is visible
     if (isNavVisible()) {
-        console.log(nav);
         document.addEventListener('mouseenter', () => {
             main.style.filter = `blur(0px)`;
         });

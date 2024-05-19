@@ -386,3 +386,12 @@ nav a{
     width: 100%;
     height: 20px;
 }
+
+.divContainer {
+    display: flex;
+    gap: 25px;
+}
+
+.divContainer * {
+    height: calc(100% - 10px);
+}
