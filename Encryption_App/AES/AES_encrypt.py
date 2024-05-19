@@ -2,6 +2,7 @@ from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 import io
 from django.http import FileResponse
+import base64
 
 def hash_string(input_string):
     sha256 = SHA256.new()
@@ -89,3 +90,18 @@ def decrypt(uploaded_file, aes_key):
 
     except ValueError:
         return None
+    
+def encryptPassword(password, aes_key):
+    cipher = AES.new(aes_key, AES.MODE_OCB)
+    ciphertext, tag = cipher.encrypt_and_digest(password.encode('utf-8'))
+    nonce = cipher.nonce[:15]
+    return base64.b64encode(ciphertext).decode('utf-8'), base64.b64encode(tag).decode('utf-8'), base64.b64encode(nonce).decode('utf-8')
+
+def decryptPassword(encryptedPassword, aes_key):
+    ciphertext = base64.b64decode(encryptedPassword.ciphertext)
+    tag = base64.b64decode(encryptedPassword.tag)
+    nonce = base64.b64decode(encryptedPassword.nonce)
+
+    cipher = AES.new(aes_key, AES.MODE_OCB, nonce=nonce)
+    decrypted_content = cipher.decrypt_and_verify(ciphertext, tag)
+    return decrypted_content.decode('utf-8')

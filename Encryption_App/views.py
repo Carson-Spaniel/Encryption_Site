@@ -4,11 +4,9 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .AES import AES_encrypt
-from .models import UserProfile
+from .models import WebsitePassword
 from django.http import JsonResponse
-import json
-import os
-from django.conf import settings
+from Crypto.Hash import SHA256
 
 @login_required(login_url='/login/')
 def encrypt_file(request):
@@ -61,21 +59,22 @@ def decrypt_file(request):
 
 @login_required(login_url='/login/')
 def passwords_page(request):
-    #! implement a unique way of having different passwords for each user.
+    sha256 = SHA256.new()
+    sha256.update(request.user.password.split('$')[-1].encode('utf-8'))
+    aes_key = sha256.digest()
 
-    passwords_file_path = os.path.join(settings.BASE_DIR, 'Encryption_App', 'passwords_encrypted.bin')
-    with open(passwords_file_path, "rb") as passwords_file:
-        passwords_json_file = AES_encrypt.decrypt(passwords_file, AES_encrypt.hash_string(f"{aes_key}"))
+    passwords = {}
+    encryptedPasswords = WebsitePassword.objects.filter(user=request.user).order_by('website')
+    for encryptedPassword in encryptedPasswords:
+        try:
+            decrypted_password = AES_encrypt.decryptPassword(encryptedPassword, aes_key)
+            passwords[encryptedPassword.website] = [encryptedPassword.username, decrypted_password]
+        except Exception as e:
+            print(f"Failed to decrypt password for {encryptedPassword.website}: {e}")
+            passwords[encryptedPassword.website] = [encryptedPassword.username, "Decryption failed"]
+    print(passwords)
 
-    if passwords_json_file is None:
-        return JsonResponse({"error": "Decryption failed."}, status=500)
-
-    passwords_json_file = passwords_json_file.getvalue()
-    passwords_json = json.loads(passwords_json_file.decode('utf-8'))
-
-    print(passwords_json)
-
-    return render(request, "passwords.html", passwords_json)
+    return render(request, "passwords.html", {'passwords':passwords})
 
 @login_required(login_url='/login/')
 def add_password_page(request):
@@ -86,47 +85,30 @@ def add_password_page(request):
         if missing_fields:
             return JsonResponse({'error': f"Missing fields: {', '.join(missing_fields)}"}, status=400)
 
-        websiteName = request.POST['websiteName']
+        websiteName = request.POST['websiteName'].title()
         username = request.POST['username']
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
 
-        if password == confirm_password:
-            #! implement a unique way of having different passwords for each user.
-
-            passwords_file_path = os.path.join(settings.BASE_DIR, 'Encryption_App', 'passwords_encrypted.bin')
-            with open(passwords_file_path, "rb") as passwords_file:
-                passwords_json_file = AES_encrypt.decrypt(passwords_file, AES_encrypt.hash_string(f"{aes_key}"))
-
-            print(passwords_json_file)
-
-            if passwords_json_file is None:
-                return JsonResponse({"error": "Decryption failed."}, status=500)
-
-            passwords_json_file = passwords_json_file.getvalue()
-            passwords_json = json.loads(passwords_json_file.decode('utf-8'))
-            passwords_json[websiteName] = [username, password]
-
-            print(f'New json: {passwords_json}')
-
-            # Convert the updated passwords dictionary back to a JSON string
-            updated_passwords_str = json.dumps(passwords_json)
-            updated_passwords_bytes = updated_passwords_str.encode('utf-8')
-
-            with open("passwords.json", "wb") as f:
-                f.write(updated_passwords_bytes)
-
-                encrypted_passwords_file = AES_encrypt.encrypt(f, AES_encrypt.hash_string(f"{aes_key}")).getvalue()
-
-            # Write the new encrypted data back to the file, overwriting it
-            with open(passwords_file_path, "wb") as f:
-                f.write(encrypted_passwords_file)
-
-            #! remove temp passwords file 
-
-            return JsonResponse({websiteName: [username, password]}, status=200)
-        else:
+        if password != confirm_password:
             return JsonResponse({'error': 'Passwords do not match.'}, status=400)
+
+        sha256 = SHA256.new()
+        sha256.update(request.user.password.split('$')[-1].encode('utf-8'))
+        aes_key = sha256.digest()
+
+        ciphertext, tag, nonce = AES_encrypt.encryptPassword(password, aes_key)
+
+        # Save the password
+        user = request.user
+        encryptedPassword, created = WebsitePassword.objects.get_or_create(user=user, website=websiteName)
+        encryptedPassword.username = username
+        encryptedPassword.ciphertext = ciphertext
+        encryptedPassword.tag = tag
+        encryptedPassword.nonce = nonce
+        encryptedPassword.save()
+
+        return JsonResponse({websiteName: [username, password]}, status=200)
 
     return render(request, "addPass.html")
 
@@ -162,8 +144,6 @@ def signup(request):
         new_user = User(username=new_username)
         new_user.set_password(password)
         new_user.save()
-
-        UserProfile.objects.create(user=new_user)
 
         messages.success(request, "Account created successfully. You can now log in.")
         return redirect('encrypt_file')
