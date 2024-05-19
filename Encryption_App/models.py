@@ -13,8 +13,6 @@ class UserProfile(models.Model):
     tag = models.TextField(blank=True, null=True)
     nonce = models.TextField(blank=True, null=True)
 
-    passwordsJson = models.TextField(blank=True, null=True)
-
     def save(self, *args, **kwargs):
         sha256 = SHA256.new()
         sha256.update(self.user.password.split('$')[-1][0:32].encode('utf-8'))
@@ -43,21 +41,6 @@ class UserProfile(models.Model):
             privateCiphertext, tag = cipher.encrypt_and_digest(priv_key.decode())
             self.private_key = tag + privateCiphertext
         super().save(*args, **kwargs)
-
-    def generate_rsa_keypair(self, key_size=2048):
-        """
-        Generates an RSA key pair for the user.
-
-        Args:
-            key_size (int): Size of the RSA key in bits (default is 2048).
-
-        Returns:
-            tuple: A tuple containing public key and private key.
-        """
-        key = RSA.generate(key_size)
-        private_key = key.export_key()
-        public_key = key.publickey().export_key()
-        return public_key, private_key
 
     def __str__(self):
         return f'{self.user.username}'
