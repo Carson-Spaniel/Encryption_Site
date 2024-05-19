@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .AES import AES_encrypt
 from .models import WebsitePassword
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from Crypto.Hash import SHA256
 
 @login_required(login_url='/login/')
@@ -72,7 +73,6 @@ def passwords_page(request):
         except Exception as e:
             print(f"Failed to decrypt password for {encryptedPassword.website}: {e}")
             passwords[encryptedPassword.website] = [encryptedPassword.username, "Decryption failed"]
-    print(passwords)
 
     return render(request, "passwords.html", {'passwords':passwords})
 
@@ -110,8 +110,6 @@ def add_password_page(request):
 
         return JsonResponse({websiteName: [username, password]}, status=200)
 
-    return render(request, "addPass.html")
-
 def login_page(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -138,12 +136,15 @@ def signup(request):
         # Check if the username already exists
         if User.objects.filter(username=new_username).exists():
             messages.error(request, "Username already exists.")
-            return redirect('login_page')
+            login_url = reverse('login_page') + '?signup=1'
+            return HttpResponseRedirect(login_url)
 
         # Create the new user
         new_user = User(username=new_username)
         new_user.set_password(password)
         new_user.save()
+
+        auth_login(request, new_user)
 
         messages.success(request, "Account created successfully. You can now log in.")
         return redirect('encrypt_file')

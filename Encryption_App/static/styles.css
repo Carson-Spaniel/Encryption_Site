@@ -88,7 +88,7 @@ input[type="reset"]:hover {
     background-color: #136e27;
 }
 
-#responseMessage {
+#responseMessage, .alert {
     margin-top: 20px;
     padding: 10px;
     border-radius: 3px;
@@ -108,7 +108,7 @@ input[type="reset"]:hover {
     margin: 5px;
 }
 
-#responseMessage.error, .not-match {
+#responseMessage.error, .not-match, .alert {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
