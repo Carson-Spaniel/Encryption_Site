@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .AES import AES_encrypt
 from .models import UserProfile
 from django.http import JsonResponse
 import json
-import io
 import os
 from django.conf import settings
 
+@login_required(login_url='/login/')
 def encrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
         uploaded_file = request.FILES['uploaded_file']
@@ -36,6 +37,7 @@ def encrypt_file(request):
 
     return render(request, 'encrypt.html')
 
+@login_required(login_url='/login/')
 def decrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
         uploaded_file = request.FILES['uploaded_file']
@@ -57,6 +59,7 @@ def decrypt_file(request):
 
     return render(request, 'decrypt.html')
 
+@login_required(login_url='/login/')
 def passwords_page(request):
     #! implement a unique way of having different passwords for each user.
 
@@ -74,6 +77,7 @@ def passwords_page(request):
 
     return render(request, "passwords.html", passwords_json)
 
+@login_required(login_url='/login/')
 def add_password_page(request):
     if request.method == 'POST':
         required_fields = ['websiteName', 'username', 'password', 'confirm_password']
@@ -165,4 +169,3 @@ def signup(request):
         return redirect('encrypt_file')
 
     return render(request, "login.html")
-
