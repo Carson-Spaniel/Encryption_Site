@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from .AES import AES_encrypt
 from .models import UserProfile
 from django.http import JsonResponse
+import json
+import io
+import os
+from django.conf import settings
 
 def encrypt_file(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
@@ -54,7 +58,21 @@ def decrypt_file(request):
     return render(request, 'decrypt.html')
 
 def passwords_page(request):
-    return render(request, "passwords.html")
+    #! implement a unique way of having different passwords for each user.
+
+    passwords_file_path = os.path.join(settings.BASE_DIR, 'Encryption_App', 'passwords_encrypted.bin')
+    with open(passwords_file_path, "rb") as passwords_file:
+        passwords_json_file = AES_encrypt.decrypt(passwords_file, AES_encrypt.hash_string(f"{aes_key}"))
+
+    if passwords_json_file is None:
+        return JsonResponse({"error": "Decryption failed."}, status=500)
+
+    passwords_json_file = passwords_json_file.getvalue()
+    passwords_json = json.loads(passwords_json_file.decode('utf-8'))
+
+    print(passwords_json)
+
+    return render(request, "passwords.html", passwords_json)
 
 def add_password_page(request):
     if request.method == 'POST':
@@ -70,7 +88,38 @@ def add_password_page(request):
         confirm_password = request.POST['confirm_password']
 
         if password == confirm_password:
-            # Here you should handle saving the password or whatever you need to do with it
+            #! implement a unique way of having different passwords for each user.
+
+            passwords_file_path = os.path.join(settings.BASE_DIR, 'Encryption_App', 'passwords_encrypted.bin')
+            with open(passwords_file_path, "rb") as passwords_file:
+                passwords_json_file = AES_encrypt.decrypt(passwords_file, AES_encrypt.hash_string(f"{aes_key}"))
+
+            print(passwords_json_file)
+
+            if passwords_json_file is None:
+                return JsonResponse({"error": "Decryption failed."}, status=500)
+
+            passwords_json_file = passwords_json_file.getvalue()
+            passwords_json = json.loads(passwords_json_file.decode('utf-8'))
+            passwords_json[websiteName] = [username, password]
+
+            print(f'New json: {passwords_json}')
+
+            # Convert the updated passwords dictionary back to a JSON string
+            updated_passwords_str = json.dumps(passwords_json)
+            updated_passwords_bytes = updated_passwords_str.encode('utf-8')
+
+            with open("passwords.json", "wb") as f:
+                f.write(updated_passwords_bytes)
+
+                encrypted_passwords_file = AES_encrypt.encrypt(f, AES_encrypt.hash_string(f"{aes_key}")).getvalue()
+
+            # Write the new encrypted data back to the file, overwriting it
+            with open(passwords_file_path, "wb") as f:
+                f.write(encrypted_passwords_file)
+
+            #! remove temp passwords file 
+
             return JsonResponse({websiteName: [username, password]}, status=200)
         else:
             return JsonResponse({'error': 'Passwords do not match.'}, status=400)
