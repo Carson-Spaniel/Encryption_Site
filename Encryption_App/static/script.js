@@ -1,16 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
     const main = document.querySelector("main");
+    const nav = document.querySelector("nav");
+    // Function to check if nav is visible
+    function isNavVisible() {
+        return window.getComputedStyle(nav).getPropertyValue('display') !== 'none';
+    }
 
-    document.addEventListener('mouseenter', () => {
-        main.style.filter = `blur(0px)`;
-    });
+    console.log(isNavVisible());
 
-    document.addEventListener('mouseleave', () => {
-        main.style.filter = `blur(15px)`;
-    });
+    // Add event listeners only if nav is visible
+    if (isNavVisible()) {
+        console.log(nav);
+        document.addEventListener('mouseenter', () => {
+            main.style.filter = `blur(0px)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            main.style.filter = `blur(15px)`;
+        });
+    }
 
     const navToggle = document.getElementById("hideNav");
-    const nav = document.querySelector("nav");
     const bottomButtons = document.querySelector(".buttons");
     const fullButtons = document.querySelector(".fullNavButtons");
     const themeToggle = document.getElementById("themeToggle");
