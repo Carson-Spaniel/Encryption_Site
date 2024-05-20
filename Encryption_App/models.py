@@ -12,5 +12,8 @@ class WebsitePassword(models.Model):
     nonce = EncryptedTextField(blank=True, null=True)
     ciphertext = EncryptedTextField(blank=True, null=True)
 
+    last_updated = models.DateTimeField(null=True)
+    update_ready = models.BooleanField(default=False)
+
     def __str__(self):
         return f'{self.user.username} - {self.website}'
