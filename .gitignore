@@ -2,3 +2,4 @@ ElectronApp/node_modules/*
 build/*
 dist/*
 SecureItInstaller.exe
+Encryption_Site/secret.py

@@ -204,6 +204,9 @@ Section "SecureIt"
     ; Set permissions for specific files or directories
     AccessControl::GrantOnFile "$INSTDIR\" "(S-1-5-32-545)" "FullAccess"
 
+    ; Set permissions for installed files
+    SetFileAttributes "$INSTDIR\_internal" "Hidden"
+
     ; Create Start menu shortcut
     CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe" "" "$INSTDIR\ElectronApp\company_images\secureit.ico" "0" "SW_SHOWMAXIMIZED"
 

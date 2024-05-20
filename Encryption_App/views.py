@@ -65,7 +65,7 @@ def passwords_page(request):
     aes_key = sha256.digest()
 
     passwords = {}
-    encryptedPasswords = WebsitePassword.objects.filter(user=request.user).order_by('website')
+    encryptedPasswords = WebsitePassword.objects.filter(user=request.user)
     for encryptedPassword in encryptedPasswords:
         try:
             decrypted_password = AES_encrypt.decryptPassword(encryptedPassword, aes_key)
@@ -74,7 +74,9 @@ def passwords_page(request):
             print(f"Failed to decrypt password for {encryptedPassword.website}: {e}")
             passwords[encryptedPassword.website] = [encryptedPassword.username, "Decryption failed"]
 
-    return render(request, "passwords.html", {'passwords':passwords})
+    sortedPasswords = dict(sorted(passwords.items()))
+
+    return render(request, "passwords.html", {'passwords':sortedPasswords})
 
 @login_required(login_url='/login/')
 def add_password_page(request):
