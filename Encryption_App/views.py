@@ -109,6 +109,26 @@ def add_password_page(request):
         encryptedPassword.save()
 
         return JsonResponse({websiteName: [username, password]}, status=200)
+    
+@login_required(login_url='/login/')
+def remove_password(request):
+    if request.method == 'POST':
+        websiteName = request.POST['websiteName'].title()
+
+        if websiteName:
+            user = request.user
+            WebsitePassword.objects.filter(user=user, website=websiteName).delete()
+            return JsonResponse({'success': 'Password deleted.'}, status=200)
+        else:
+            return JsonResponse({'error': 'Website name not provided.'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
+def generate_password(request):
+    if request.method == "POST":
+        password = AES_encrypt.generatePassword()
+        return JsonResponse({'success': 'Password Generated', 'password': password}, status=200)
+    return render(request, "generate.html")
 
 def login_page(request):
     if request.method == "POST":
@@ -122,6 +142,8 @@ def login_page(request):
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, "login.html")
+
+#!add logout
 
 def signup(request):
     if request.method == "POST":

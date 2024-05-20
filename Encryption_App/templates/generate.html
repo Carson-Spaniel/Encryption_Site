@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <style>
+        body.dark-mode #generate {
+            background-color: #383838;
+        }
+
+        #generate {
+            background-color: white;
+        }
+
+        #generate svg path {
+            fill: #007bff;
+        }
+
+        #generate span{
+            color: #007bff;
+            font-weight: 900;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .divContainer.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="generate">
+        <h1>Generate Password</h1>
+        <input type="button" value="Generate Password" onclick="performFetch()" style="margin: 20px auto; width: 100%;">
+
+        <div class="divContainer hidden">
+            <input type="text" id="password" class="editable-input" style="margin-bottom: 0px; width: 80%;" placeholder="Generated password will appear here">
+            <input type="button" id="button" value="Show" onclick="togglePasswordVisibilityHere()" style="padding: 10px 5px; width: 110px; ">
+            <button class="download" id="copy" onclick="copyPasswordToClipboardHere()" style="padding: 10px 5px; width: 110px;">Copy to Clipboard</button>
+        </div>
+
+        <div id="responseMessage" class="responseMessage"></div>
+    </div>
+</body>
+
+<script>
+    // Function to toggle password visibility
+    function togglePasswordVisibilityHere() {
+        const passwordField = document.getElementById('password');
+        const button = document.getElementById('button');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            button.value = 'Hide';
+        } else {
+            passwordField.type = 'password';
+            button.value = 'Show';
+        }
+    }
+
+    // Function to copy password to clipboard
+    function copyPasswordToClipboardHere() {
+        const el = document.createElement('textarea');
+        el.value = document.getElementById('password').value;
+        const button = document.getElementById('copy');
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        // alert('Password copied to clipboard!');
+        button.innerText = "Copied!";
+        setTimeout(function() {
+            button.innerText = "Copy to Clipboard";
+        }, 2000);
+    }
+
+    function performFetch(){
+        const className = '.responseMessage';
+        fetch('{% url "generate_password" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(data => {
+            const divContainer = document.querySelector('.divContainer');
+            divContainer.classList.remove('hidden')
+            const passwordField = document.getElementById('password');
+            const button = document.getElementById('button');
+            passwordField.type = 'text';
+            button.value = 'Show';
+            passwordField.value = data.password;
+            document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Password generated!</div>';
+            document.querySelector(className).style.display = 'block';
+            copyPasswordToClipboardHere()
+            setTimeout(function() {
+                document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                document.querySelector(className).style.display = 'none'; // Hide the element
+                passwordField.type = 'password';
+                button.value = 'Hide';
+            }, 2000);
+        })
+        .catch(error => {
+            document.querySelector(className).innerHTML = '<div id="responseMessage" class="error inner" style="margin-top: 0px;">An error occurred. Please try again.</div>';
+            document.querySelector(className).style.display = 'block';
+            console.error('There was an error!', error);
+            setTimeout(function() {
+                document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                document.querySelector(className).style.display = 'none'; // Hide the element
+            }, 2000);
+        });
+    }
+</script>
+
+{% endblock %}

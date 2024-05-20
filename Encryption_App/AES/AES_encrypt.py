@@ -3,6 +3,7 @@ from Crypto.Hash import SHA256
 import io
 from django.http import FileResponse
 import base64
+from Crypto.Random import get_random_bytes
 
 def hash_string(input_string):
     sha256 = SHA256.new()
@@ -105,3 +106,6 @@ def decryptPassword(encryptedPassword, aes_key):
     cipher = AES.new(aes_key, AES.MODE_OCB, nonce=nonce)
     decrypted_content = cipher.decrypt_and_verify(ciphertext, tag)
     return decrypted_content.decode('utf-8')
+
+def generatePassword():
+    return base64.b64encode(get_random_bytes(32)).decode('utf-8')
