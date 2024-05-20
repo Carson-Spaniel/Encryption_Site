@@ -61,7 +61,7 @@ def decrypt_file(request):
 @login_required(login_url='/login/')
 def passwords_page(request):
     sha256 = SHA256.new()
-    sha256.update(request.user.password.split('$')[-1].encode('utf-8'))
+    sha256.update(request.user.password.encode('utf-8'))
     aes_key = sha256.digest()
 
     passwords = {}
@@ -100,7 +100,7 @@ def add_password_page(request):
         hashed_website = sha256.digest()
 
         sha256 = SHA256.new()
-        sha256.update(request.user.password.split('$')[-1].encode('utf-8'))
+        sha256.update(request.user.password.encode('utf-8'))
         aes_key = sha256.digest()
 
         ciphertext, tag, nonce = AES_encrypt.encryptPassword(password, aes_key)
