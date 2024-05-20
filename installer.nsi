@@ -24,7 +24,7 @@ VIAddVersionKey "ManifestFile" "admin_manifest.xml"
 ; --------------------------------------------------------------------------------------------------
  
 Name "SecureIt Password Manager"
-OutFile "SecureItInstaller.exe"
+OutFile "SecureIt-Installer-win-64.exe"
 Icon "secureit.ico"
 Caption "SecureIt Installation"
 BrandingText "Install SecureIt"
@@ -211,7 +211,7 @@ Section "SecureIt"
     CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe" "" "$INSTDIR\ElectronApp\company_images\secureit.ico" "0" "SW_SHOWMAXIMIZED"
 
     ; Write the uninstaller
-    WriteUninstaller "$INSTDIR\SecureItUninstaller.exe"
+    WriteUninstaller "$INSTDIR\SecureIt-Uninstaller.exe"
 
 SectionEnd
 
