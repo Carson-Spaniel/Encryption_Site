@@ -94,6 +94,10 @@ def add_password_page(request):
 
         if password != confirm_password:
             return JsonResponse({'error': 'Passwords do not match.'}, status=400)
+        
+        sha256 = SHA256.new()
+        sha256.update(websiteName.encode('utf-8'))
+        hashed_website = sha256.digest()
 
         sha256 = SHA256.new()
         sha256.update(request.user.password.split('$')[-1].encode('utf-8'))
@@ -103,7 +107,8 @@ def add_password_page(request):
 
         # Save the password
         user = request.user
-        encryptedPassword, created = WebsitePassword.objects.get_or_create(user=user, website=websiteName)
+        encryptedPassword, created = WebsitePassword.objects.get_or_create(user=user, hashed_website=hashed_website)
+        encryptedPassword.website = websiteName
         encryptedPassword.username = username
         encryptedPassword.ciphertext = ciphertext
         encryptedPassword.tag = tag
@@ -119,7 +124,10 @@ def remove_password(request):
 
         if websiteName:
             user = request.user
-            WebsitePassword.objects.filter(user=user, website=websiteName).delete()
+            sha256 = SHA256.new()
+            sha256.update(websiteName.encode('utf-8'))
+            hashed_website = sha256.digest()
+            WebsitePassword.objects.filter(user=user, hashed_website=hashed_website).delete()
             return JsonResponse({'success': 'Password deleted.'}, status=200)
         else:
             return JsonResponse({'error': 'Website name not provided.'}, status=400)

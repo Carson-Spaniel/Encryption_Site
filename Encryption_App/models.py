@@ -4,6 +4,7 @@ from encrypted_model_fields.fields import EncryptedTextField
 
 class WebsitePassword(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    hashed_website = models.TextField(blank=True, null=True)
     website = EncryptedTextField(blank=True, null=True)
     username = EncryptedTextField(blank=True, null=True)
 
