@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'Encryption_Site.activity.SessionTimeoutMiddleware',
+    'Encryption_App.activity.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'Encryption_Site.urls'
