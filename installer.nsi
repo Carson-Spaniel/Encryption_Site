@@ -205,10 +205,10 @@ Section "SecureIt"
     AccessControl::GrantOnFile "$INSTDIR\" "(S-1-5-32-545)" "FullAccess"
 
     ; Create Start menu shortcut
-    CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe"
+    CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe" "" "$INSTDIR\ElectronApp\company_images\secureit.ico" "0" "SW_SHOWMAXIMIZED"
 
     ; Write the uninstaller
-    WriteUninstaller "$INSTDIR\Uninstall SecureIt.exe"
+    WriteUninstaller "$INSTDIR\SecureItUninstaller.exe"
 
 SectionEnd
 
@@ -225,14 +225,14 @@ SectionEnd
 
 ; Uninstaller
 Section "Uninstall"
-Delete "$INSTDIR\server.exe"
-; Delete other installed files and directories
-Delete "$INSTDIR\*.*" ; Deletes all files in the installation directory
-RMDir /r "$INSTDIR" ; Recursively removes all directories and subdirectories
+    Delete "$INSTDIR\server.exe"
+    ; Delete other installed files and directories
+    Delete "$INSTDIR\*.*" ; Deletes all files in the installation directory
+    RMDir /r "$INSTDIR" ; Recursively removes all directories and subdirectories
 
-; Delete Start menu shortcut
-Delete "$SMPROGRAMS\SecureIt\SecureIt.lnk"
-RMDir "$SMPROGRAMS\SecureIt"
+    ; Delete Start menu shortcut
+    Delete "$SMPROGRAMS\SecureIt\SecureIt.lnk"
+    RMDir "$SMPROGRAMS\SecureIt"
 SectionEnd
 
 ; Uninstall information
