@@ -48,6 +48,6 @@ python manage.py runserver
 Run this script below to create the exe.
 ```
 pyinstaller --noconsole --name SecureIt --add-data "ElectronApp;ElectronApp"
- --add-data "Encryption_App;Encryption_App" --hidden-import=django server.py
+ --add-data "Encryption_App;Encryption_App" --hidden-import=django --icon=secureit.ico server.py
  ```
 
