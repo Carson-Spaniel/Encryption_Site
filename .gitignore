@@ -3,3 +3,4 @@ build/*
 dist/*
 SecureItInstaller.exe
 Encryption_Site/secret.py
+SecureIt-Installer-win-64.exe
