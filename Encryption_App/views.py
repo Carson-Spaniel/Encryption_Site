@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .AES import AES_encrypt
@@ -137,13 +137,15 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            messages.success(request, "Login successful.")
             return redirect('encrypt_file')
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, "login.html")
 
-#!add logout
+def logout_page(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return render(request, "login.html")
 
 def signup(request):
     if request.method == "POST":
@@ -168,7 +170,6 @@ def signup(request):
 
         auth_login(request, new_user)
 
-        messages.success(request, "Account created successfully. You can now log in.")
         return redirect('encrypt_file')
 
     return render(request, "login.html")

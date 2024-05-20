@@ -269,6 +269,16 @@ body.dark-mode .main {
     transition: background-color 0.1s;
     margin: 0 auto;
     overflow: hidden;
+    cursor: pointer;
+}
+
+.logoutButton button {
+    overflow: visible;
+}
+
+.logoutButton {
+    height: unset;
+    overflow: visible;
 }
 
 .buttons button:hover {
@@ -374,6 +384,14 @@ nav a{
 
 .buttons.hidden #hideNav svg{
     transform: scale(6) translate(30.5%, 9.5%) rotate(-45deg)
+}
+
+.buttons #logout svg{
+    transform: scale(5) translate(7%, 34%);
+}
+
+.buttons.hidden #logout svg{
+    transform: scale(4) translate(2%, 28%);
 }
 
 .buttons svg path{
