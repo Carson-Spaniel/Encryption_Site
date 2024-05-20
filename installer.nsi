@@ -5,9 +5,11 @@ VIAddVersionKey "CompanyName" "Carson Spaniel"
 VIAddVersionKey "FileVersion" "1.0.0.0"
 VIAddVersionKey "FileDescription" "SecureIt Application"
 VIAddVersionKey "LegalCopyright" "© 2024 Carson Spaniel"
+VIAddVersionKey "ManifestFile" "admin_manifest.xml"
 
 !include "MUI2.nsh"
 !include WinMessages.nsh
+!addplugindir "C:\Program Files (x86)\NSIS\Plugins\x86-unicode"
  
 ; Local bitmap path.
 !define BITMAP_FILE "secureit.bmp"
@@ -183,20 +185,31 @@ Function .onGUIEnd
   ; Destroy the bitmap.
   System::Call `gdi32::DeleteObject(i s)` $hBitmap
 FunctionEnd
+
+Function .onInit
+    ; Include the manifest file
+    InitPluginsDir
+    File /oname=$PLUGINSDIR\SecureIt.exe.manifest "admin_manifest.xml"
+FunctionEnd
  
 ; --------------------------------------------------------------------------------------------------
 ; Install section
 ; --------------------------------------------------------------------------------------------------
- 
+
 Section "SecureIt"
-SetOutPath $INSTDIR
-File /r "dist\SecureIt\*"  ; Include all files and directories in the dist folder
 
-; Create Start menu shortcut
-CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe"
+    SetOutPath $INSTDIR
+    File /r "dist\SecureIt\*"  ; Include all files and directories in the dist folder
 
-; Write the uninstaller
-WriteUninstaller "$INSTDIR\Uninstall SecureIt.exe"
+    ; Set permissions for specific files or directories
+    AccessControl::GrantOnFile "$INSTDIR\" "(S-1-5-32-545)" "FullAccess"
+
+    ; Create Start menu shortcut
+    CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe"
+
+    ; Write the uninstaller
+    WriteUninstaller "$INSTDIR\Uninstall SecureIt.exe"
+
 SectionEnd
 
 ; Request admin privileges
