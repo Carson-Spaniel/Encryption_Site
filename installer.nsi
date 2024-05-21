@@ -24,7 +24,7 @@ VIAddVersionKey "ManifestFile" "admin_manifest.xml"
 ; --------------------------------------------------------------------------------------------------
  
 Name "SecureIt Password Manager"
-OutFile "SecureIt-Installer-win-64.exe"
+OutFile "SecureIt-Installer-1.0.1-win-64.exe"
 Icon "secureit.ico"
 Caption "SecureIt Installation"
 BrandingText "Install SecureIt"

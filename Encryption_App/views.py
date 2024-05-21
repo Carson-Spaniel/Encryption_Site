@@ -99,7 +99,7 @@ def add_password_page(request):
             jsonPasswords = json.loads(uploaded_file.read())
 
             for websiteName, creds in jsonPasswords.items():
-                websiteName = websiteName.title()
+                websiteName = websiteName.replace("'","").title()
                 username = creds[0]
                 password = creds[1]
                 update_ready = creds[2]
@@ -134,7 +134,7 @@ def add_password_page(request):
             if missing_fields:
                 return JsonResponse({'error': f"Missing fields: {', '.join(missing_fields)}"}, status=400)
 
-            websiteName = request.POST['websiteName'].title()
+            websiteName = request.POST['websiteName'].replace("'","").title()
             username = request.POST['username']
             password = request.POST['password']
             confirm_password = request.POST['confirm_password']
@@ -171,7 +171,7 @@ def add_password_page(request):
 @login_required(login_url='/login/')
 def remove_password(request):
     if request.method == 'POST':
-        websiteName = request.POST['websiteName'].title()
+        websiteName = request.POST['websiteName'].replace("'","").title()
 
         if websiteName:
             user = request.user
