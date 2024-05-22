@@ -38,3 +38,29 @@ You can download the latest version of the installer from the following link:
 [Download Secure Password Manager and File Encryption Tool](https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing)
 
 Please note that this is a secure application, and you should only download it from trusted sources.
+
+## Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [Latest Release] v1.1.0
+
+- Added
+  - Generated usernames, passwords, and passphrases
+  - Import/Export passwords
+- Changed
+  - Installer to keep current passwords and only update features
+
+### v1.0.2
+
+- Bug fixes
+  - Some passwords were causing errors
+
+### v1.0.0
+
+- Initial release
+
+[Latest Release]: https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing
