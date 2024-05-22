@@ -1,8 +1,9 @@
 ; Version information
-VIProductVersion "1.0.0.0"
+!define PRODUCT_VERSION "1.1.0"
+VIProductVersion "1.1.0.0"
+OutFile "SecureIt-Installer-1.1.0-win-64.exe"
 VIAddVersionKey "ProductName" "SecureIt"
 VIAddVersionKey "CompanyName" "Carson Spaniel"
-VIAddVersionKey "FileVersion" "1.0.0.0"
 VIAddVersionKey "FileDescription" "SecureIt Application"
 VIAddVersionKey "LegalCopyright" "© 2024 Carson Spaniel"
 VIAddVersionKey "ManifestFile" "admin_manifest.xml"
@@ -24,7 +25,6 @@ VIAddVersionKey "ManifestFile" "admin_manifest.xml"
 ; --------------------------------------------------------------------------------------------------
  
 Name "SecureIt Password Manager"
-OutFile "SecureIt-Installer-1.0.1-win-64.exe"
 Icon "secureit.ico"
 Caption "SecureIt Installation"
 BrandingText "Install SecureIt"
@@ -45,7 +45,6 @@ ShowInstDetails show
 ; --------------------------------------------------------------------------------------------------
  
 Var hBitmap
-!define PRODUCT_VERSION "1.0.1"
  
 ; --------------------------------------------------------------------------------------------------
 ; Pages
@@ -194,27 +193,43 @@ Function .onInit
 FunctionEnd
 
 Function CheckInstalledVersion
-    SetOutPath "$INSTDIR\_internal"
-    FileOpen $0 "$INSTDIR\_internal\version.txt" "r"
-    ${If} $0 != "" 
-        FileRead $0 $1
-        FileClose $0
+    FileOpen $2 "$INSTDIR\_internal\version.txt" "r"
+    ${If} $2 != "" 
+        FileRead $2 $1
+        FileClose $2
         ${If} $1 != ${PRODUCT_VERSION}
             ; Perform actions if a previous version is detected
-            MessageBox MB_ICONINFORMATION|MB_YESNO "An older version of SecureIt is already installed. Do you want to upgrade?"
-            Pop $0
-            StrCmp $0 IDYES PerformUpgrade
+            MessageBox MB_ICONINFORMATION|MB_YESNO "An older version of SecureIt is already installed. Do you want to upgrade?" IDYES true IDNO false
+            MessageBox MB_ICONINFORMATION|MB_OK "User answer: $0"
+            true:
+                Goto PerformUpgrade
+            false:
+                ; If user chooses not to upgrade, inform them and quit
+                MessageBox MB_ICONINFORMATION|MB_OK "No upgrade performed. SecureIt remains at version $1"
+                Quit
+        ${Else}
+            ; Inform the user that the versions match and quit when they press OK
+            MessageBox MB_ICONINFORMATION|MB_OK "SecureIt is already installed and up to date with version ${PRODUCT_VERSION}"
             Quit
         ${EndIf}
     ${EndIf}
-    Goto DonePerformUpgrade ; Jump past the PerformUpgrade function if not needed
-PerformUpgrade:
-    ; Perform upgrade actions
-    SetOutPath "$INSTDIR\_internal"
-    RMDir /r "$INSTDIR\_internal\Encryption_App" ; Remove existing Encryption_App directory
-    SetOutPath "$INSTDIR\_internal\Encryption_App"
-    File /r "dist\SecureIt\_internal\Encryption_App\*" ; Install all files from the new version's _internal directory
-DonePerformUpgrade:
+    Goto DonePerformUpgrade ; Jump past the PerformUpgrade label if not needed
+    PerformUpgrade:
+      ; Perform upgrade actions
+      SetOutPath "$INSTDIR\_internal"
+      RMDir /r "$INSTDIR\_internal\Encryption_App" ; Remove existing Encryption_App directory
+      SetOutPath "$INSTDIR\_internal\Encryption_App"
+      File /r "dist\SecureIt\_internal\Encryption_App\*" ; Install all files from the new version's _internal directory
+
+      SetOutPath "$INSTDIR\_internal"
+      FileOpen $1 "$INSTDIR\_internal\version.txt" "w"
+      FileWrite $1 "${PRODUCT_VERSION}"
+      FileClose $1
+
+      MessageBox MB_ICONINFORMATION|MB_OK "SecureIt has been upgraded to version ${PRODUCT_VERSION}"
+      
+      Quit
+    DonePerformUpgrade:
 FunctionEnd
  
 ; --------------------------------------------------------------------------------------------------
