@@ -9,7 +9,7 @@ This project is a secure password manager and file encryption tool that runs loc
 - Encrypt passwords using AES-256 encryption
 - Decrypt passwords using your password
 - Add, remove, and update passwords
-- Generate random, secure passwords
+- Generate random usernames, secure passwords and passphrases
 - User authentication and authorization
 
 ### File Encryption and Decryption

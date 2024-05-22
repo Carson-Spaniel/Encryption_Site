@@ -28,28 +28,87 @@
         .divContainer.hidden {
             display: none;
         }
+
+        .generate {
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        .generateFields {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        html {
+            scrollbar-width: thin; /* Makes the scrollbar thin */
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Color of the thumb and track */
+        }
     </style>
 </head>
 <body>
-    <div class="generate">
-        <h1>Generate Password</h1>
-        <input type="button" value="Generate Password" onclick="performFetch()" style="margin: 20px auto; width: 100%;">
+    <div class="generateFields">
+        <!-- Username Generation -->
+        <div class="generate">
+            <h1>Generate Username</h1>
+            <input type="button" value="Generate Username" onclick="fetchUsername()" style="margin: 20px auto; width: 100%;">
 
-        <div class="divContainer hidden">
-            <input type="text" id="password" class="editable-input" style="margin-bottom: 0px; width: 80%;" placeholder="Generated password will appear here">
-            <input type="button" id="button" value="Show" onclick="togglePasswordVisibilityHere()" style="padding: 10px 5px; width: 110px; ">
-            <button class="download" id="copy" onclick="copyPasswordToClipboardHere()" style="padding: 10px 5px; width: 110px;">Copy to Clipboard</button>
+            <div class="divContainer hidden divUsername">
+                <input type="text" id="username" class="editable-input" style="margin-bottom: 0px; width: 90%;" placeholder="Generated username will appear here">
+                <button class="download" id="copyUsername" onclick="copyUsernameToClipboardHere()" style="padding: 10px 5px; width: 110px;">Copy to Clipboard</button>
+            </div>
+
+            <!-- <div id="responseMessage" class="responseMessageUsername"></div> -->
         </div>
 
-        <div id="responseMessage" class="responseMessage"></div>
+        <!-- Password Generation -->
+        <div class="generate">
+            <h1>Generate Password</h1>
+            <input type="button" value="Generate Password" onclick="fetchPassword()" style="margin: 20px auto; width: 100%;">
+
+            <div class="divContainer hidden divPassword">
+                <input type="text" id="password" class="editable-input" style="margin-bottom: 0px; width: 80%;" placeholder="Generated password will appear here">
+                <input type="button" id="hidePass" value="Show" onclick="togglePasswordVisibilityHere()" style="padding: 10px 5px; width: 110px; ">
+                <button class="download" id="copyPassword" onclick="copyPasswordToClipboardHere()" style="padding: 10px 5px; width: 110px;">Copy to Clipboard</button>
+            </div>
+
+            <!-- <div id="responseMessage" class="responseMessagePassword"></div> -->
+        </div>
+
+        <!-- PIN Generation -->
+        <!-- <div class="generate">
+            <h1>Generate PIN</h1>
+            <input type="button" value="Generate PIN" onclick="fetchPin()" style="margin: 20px auto; width: 100%;">
+
+            <div class="divContainer hidden divPin">
+                <input type="text" id="pin" class="editable-input" style="margin-bottom: 0px; width: 90%;" placeholder="Generated PIN will appear here">
+                <button class="download" id="copyPin" onclick="copyPinToClipboardHere()" style="padding: 10px 5px; width: 110px;">Copy to Clipboard</button>
+            </div>
+
+            <div id="responseMessage" class="responseMessagePin"></div>
+        </div> -->
+
+        <!-- Passphrase Generation -->
+        <div class="generate">
+            <h1>Generate Passphrase</h1>
+            <input type="button" value="Generate Passphrase" onclick="fetchPassphrase()" style="margin: 20px auto; width: 100%;">
+
+            <div class="divContainer hidden divPassphrase">
+                <input type="text" id="passphrase" class="editable-input" style="margin-bottom: 0px; width: 90%;" placeholder="Generated passphrase will appear here">
+                <button class="download" id="copyPassphrase" onclick="copyPassphraseToClipboardHere()" style="padding: 10px 5px; width: 110px;">Copy to Clipboard</button>
+            </div>
+
+            <!-- <div id="responseMessage" class="responseMessagePassphrase"></div> -->
+        </div>
     </div>
 </body>
 
 <script>
-    // Function to toggle password visibility
     function togglePasswordVisibilityHere() {
         const passwordField = document.getElementById('password');
-        const button = document.getElementById('button');
+        const button = document.getElementById('hidePass');
         if (passwordField.type === 'password') {
             passwordField.type = 'text';
             button.value = 'Hide';
@@ -59,25 +118,46 @@
         }
     }
 
-    // Function to copy password to clipboard
-    function copyPasswordToClipboardHere() {
+    function copyToClipboard(value, button) {
         const el = document.createElement('textarea');
-        el.value = document.getElementById('password').value;
-        const button = document.getElementById('copy');
+        el.value = value;
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-        // alert('Password copied to clipboard!');
         button.innerText = "Copied!";
-        setTimeout(function() {
-            button.innerText = "Copy to Clipboard";
-        }, 2000);
+        setTimeout(() => { button.innerText = "Copy to Clipboard"; }, 2000);
     }
 
-    function performFetch(){
-        const className = '.responseMessage';
-        fetch('{% url "generate_password" %}', {
+    function copyUsernameToClipboardHere() {
+        const value = document.getElementById('username').value;
+        const button = document.getElementById('copyUsername');
+        copyToClipboard(value, button);
+    }
+
+    function copyPasswordToClipboardHere() {
+        const value = document.getElementById('password');
+        const button = document.getElementById('copyPassword');
+        const buttonVis = document.getElementById('hidePass');
+        value.type = "password";
+        buttonVis.value = "Show";
+        copyToClipboard(value.value, button);
+    }
+
+    function copyPinToClipboardHere() {
+        const value = document.getElementById('pin').value;
+        const button = document.getElementById('copyPin');
+        copyToClipboard(value, button);
+    }
+
+    function copyPassphraseToClipboardHere() {
+        const value = document.getElementById('passphrase').value;
+        const button = document.getElementById('copyPassphrase');
+        copyToClipboard(value, button);
+    }
+
+    function fetchFromApi(endpoint, className, inputFieldId, copyFunction) {
+        fetch(endpoint, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
@@ -87,36 +167,37 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json(); // Parse the JSON response
+            return response.json();
         })
         .then(data => {
-            const divContainer = document.querySelector('.divContainer');
-            divContainer.classList.remove('hidden')
-            const passwordField = document.getElementById('password');
-            const button = document.getElementById('button');
-            passwordField.type = 'text';
-            button.value = 'Show';
-            passwordField.value = data.password;
-            document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Password generated!</div>';
-            document.querySelector(className).style.display = 'block';
-            copyPasswordToClipboardHere()
-            setTimeout(function() {
-                document.querySelector(className).innerHTML = ""; // Clear inner HTML
-                document.querySelector(className).style.display = 'none'; // Hide the element
-                passwordField.type = 'password';
-                button.value = 'Hide';
-            }, 2000);
+            const divContainer = document.querySelector(`.div${className}`);
+            divContainer.classList.remove('hidden');
+            const inputField = document.getElementById(inputFieldId);
+            inputField.value = data[inputFieldId];
+            // document.querySelector(`.responseMessage${className}`).innerHTML = `<div id="responseMessage" class="success inner" style="margin-top: 0px;">${className} generated!</div>`;
+            // document.querySelector(`.responseMessage${className}`).style.display = 'block';
+            copyFunction();
+            // setTimeout(() => {
+            //     document.querySelector(`.responseMessage${className}`).innerHTML = "";
+            //     document.querySelector(`.responseMessage${className}`).style.display = 'none';
+            // }, 2000);
         })
         .catch(error => {
-            document.querySelector(className).innerHTML = '<div id="responseMessage" class="error inner" style="margin-top: 0px;">An error occurred. Please try again.</div>';
-            document.querySelector(className).style.display = 'block';
-            console.error('There was an error!', error);
-            setTimeout(function() {
-                document.querySelector(className).innerHTML = ""; // Clear inner HTML
-                document.querySelector(className).style.display = 'none'; // Hide the element
-            }, 2000);
+            alert("An error occurred. Please try again.")
+            // document.querySelector(`.responseMessage${className}`).innerHTML = `<div id="responseMessage" class="error inner" style="margin-top: 0px;">An error occurred. Please try again.</div>`;
+            // document.querySelector(`.responseMessage${className}`).style.display = 'block';
+            // console.error('There was an error!', error);
+            // setTimeout(() => {
+            //     document.querySelector(`.responseMessage${className}`).innerHTML = "";
+            //     document.querySelector(`.responseMessage${className}`).style.display = 'none';
+            // }, 2000);
         });
     }
+
+    function fetchPassword() { fetchFromApi('{% url "generate_password" %}', 'Password', 'password', copyPasswordToClipboardHere); }
+    function fetchUsername() { fetchFromApi('{% url "generate_username" %}', 'Username', 'username', copyUsernameToClipboardHere); }
+    function fetchPin() { fetchFromApi('{% url "generate_pin" %}', 'Pin', 'pin', copyPinToClipboardHere); }
+    function fetchPassphrase() { fetchFromApi('{% url "generate_passphrase" %}', 'Passphrase', 'passphrase', copyPassphraseToClipboardHere); }
 </script>
 
 {% endblock %}

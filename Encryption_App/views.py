@@ -12,6 +12,9 @@ from datetime import timedelta
 from django.utils import timezone
 import json
 from django.utils.datastructures import MultiValueDictKeyError
+import random
+import string
+from .generate import adjectives, nouns
 
 @login_required(login_url='/login/')
 def encrypt_file(request):
@@ -192,6 +195,39 @@ def generate_password(request):
         return JsonResponse({'success': 'Password Generated', 'password': password}, status=200)
     return render(request, "generate.html")
 
+def generate_username(request):
+    if request.method == "POST":
+        numbers = [''.join(random.choices(string.digits, k=2))]
+
+        adj = random.choice(adjectives)
+        noun = random.choice(nouns)
+        num = random.choice(numbers)
+        username = adj.title() + noun.title() + num
+
+        return JsonResponse({'success': 'Username Generated', 'username': username}, status=200)
+    return render(request, "generate.html")
+
+def generate_pin(request):
+    if request.method == "POST":
+        numbers = [''.join(random.choices(string.digits, k=6))]
+
+        return JsonResponse({'success': 'Username Generated', 'pin': numbers}, status=200)
+    return render(request, "generate.html")
+
+@login_required(login_url='/login/')
+def generate_passphrase(request):
+    if request.method == "POST":
+        words = []
+        num_words = 5
+        for _ in range(num_words // 2):
+            adj = random.choice(adjectives)
+            noun = random.choice(nouns)
+            words.append(adj)
+            words.append(noun)
+        passphrase = ' '.join(words)
+        return JsonResponse({'success': 'Passphrase Generated', 'passphrase': passphrase}, status=200)
+    return render(request, "generate.html")
+
 def login_page(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -199,7 +235,7 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('encrypt_file')
+            return redirect('passwords_page')
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, "login.html")
