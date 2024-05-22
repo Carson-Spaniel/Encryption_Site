@@ -45,6 +45,7 @@ ShowInstDetails show
 ; --------------------------------------------------------------------------------------------------
  
 Var hBitmap
+!define PRODUCT_VERSION "1.0.1"
  
 ; --------------------------------------------------------------------------------------------------
 ; Pages
@@ -191,6 +192,30 @@ Function .onInit
     InitPluginsDir
     File /oname=$PLUGINSDIR\SecureIt.exe.manifest "admin_manifest.xml"
 FunctionEnd
+
+Function CheckInstalledVersion
+    SetOutPath "$INSTDIR\_internal"
+    FileOpen $0 "$INSTDIR\_internal\version.txt" "r"
+    ${If} $0 != "" 
+        FileRead $0 $1
+        FileClose $0
+        ${If} $1 != ${PRODUCT_VERSION}
+            ; Perform actions if a previous version is detected
+            MessageBox MB_ICONINFORMATION|MB_YESNO "An older version of SecureIt is already installed. Do you want to upgrade?"
+            Pop $0
+            StrCmp $0 IDYES PerformUpgrade
+            Quit
+        ${EndIf}
+    ${EndIf}
+    Goto DonePerformUpgrade ; Jump past the PerformUpgrade function if not needed
+PerformUpgrade:
+    ; Perform upgrade actions
+    SetOutPath "$INSTDIR\_internal"
+    RMDir /r "$INSTDIR\_internal\Encryption_App" ; Remove existing Encryption_App directory
+    SetOutPath "$INSTDIR\_internal\Encryption_App"
+    File /r "dist\SecureIt\_internal\Encryption_App\*" ; Install all files from the new version's _internal directory
+DonePerformUpgrade:
+FunctionEnd
  
 ; --------------------------------------------------------------------------------------------------
 ; Install section
@@ -198,8 +223,15 @@ FunctionEnd
 
 Section "SecureIt"
 
+    Call CheckInstalledVersion
+
     SetOutPath $INSTDIR
     File /r "dist\SecureIt\*"  ; Include all files and directories in the dist folder
+
+    SetOutPath "$INSTDIR\_internal"
+    FileOpen $1 "$INSTDIR\_internal\version.txt" "w"
+    FileWrite $1 "${PRODUCT_VERSION}"
+    FileClose $1
 
     ; Set permissions for specific files or directories
     AccessControl::GrantOnFile "$INSTDIR\" "(S-1-5-32-545)" "FullAccess"
