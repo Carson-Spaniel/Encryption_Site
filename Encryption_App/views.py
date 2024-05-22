@@ -218,7 +218,7 @@ def generate_pin(request):
 def generate_passphrase(request):
     if request.method == "POST":
         words = []
-        num_words = 5
+        num_words = 6
         for _ in range(num_words // 2):
             adj = random.choice(adjectives)
             noun = random.choice(nouns)
