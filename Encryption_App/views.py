@@ -82,7 +82,7 @@ def passwords_page(request):
             passwords[encryptedPassword.website] = [encryptedPassword.username, decrypted_password, encryptedPassword.update_ready, encryptedPassword.last_updated]
             jsonPasswords[encryptedPassword.website] = [encryptedPassword.username, decrypted_password, 1 if encryptedPassword.update_ready else 0, encryptedPassword.last_updated.isoformat()]
         except Exception as e:
-            print(f"Failed to decrypt password for {encryptedPassword.website}: {e}")
+            # print(f"Failed to decrypt password for {encryptedPassword.website}: {e}")
             passwords[encryptedPassword.website] = [encryptedPassword.username, "Decryption failed", encryptedPassword.update_ready, encryptedPassword.last_updated]
             jsonPasswords[encryptedPassword.website] = [encryptedPassword.username, "Decryption failed", 1 if encryptedPassword.update_ready else 0, encryptedPassword.last_updated.isoformat()]
 
