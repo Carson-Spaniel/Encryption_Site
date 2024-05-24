@@ -34,6 +34,8 @@ def start_django_server():
         sys.stdout = open(os.devnull, 'w')
         sys.stderr = open(os.devnull, 'w')
         
+        call_command('makemigrations')
+        call_command('migrate')
         call_command('runserver', '127.0.0.1:8000', '--noreload')
     except Exception as exc:
         raise Exception(f'An error occurred: {exc}') from exc
