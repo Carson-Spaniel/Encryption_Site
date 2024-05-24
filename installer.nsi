@@ -1,9 +1,8 @@
 ; Version information
-!define PRODUCT_VERSION "1.1.0"
-VIProductVersion "1.1.0.0"
-OutFile "SecureIt-Installer-1.1.0-win-64.exe"
+VIProductVersion "1.0.0.0"
 VIAddVersionKey "ProductName" "SecureIt"
 VIAddVersionKey "CompanyName" "Carson Spaniel"
+VIAddVersionKey "FileVersion" "1.0.0.0"
 VIAddVersionKey "FileDescription" "SecureIt Application"
 VIAddVersionKey "LegalCopyright" "© 2024 Carson Spaniel"
 VIAddVersionKey "ManifestFile" "admin_manifest.xml"
@@ -25,6 +24,7 @@ VIAddVersionKey "ManifestFile" "admin_manifest.xml"
 ; --------------------------------------------------------------------------------------------------
  
 Name "SecureIt Password Manager"
+OutFile "SecureItInstaller.exe"
 Icon "secureit.ico"
 Caption "SecureIt Installation"
 BrandingText "Install SecureIt"
@@ -191,46 +191,6 @@ Function .onInit
     InitPluginsDir
     File /oname=$PLUGINSDIR\SecureIt.exe.manifest "admin_manifest.xml"
 FunctionEnd
-
-Function CheckInstalledVersion
-    FileOpen $2 "$INSTDIR\_internal\version.txt" "r"
-    ${If} $2 != "" 
-        FileRead $2 $1
-        FileClose $2
-        ${If} $1 != ${PRODUCT_VERSION}
-            ; Perform actions if a previous version is detected
-            MessageBox MB_ICONINFORMATION|MB_YESNO "An older version of SecureIt is already installed. Do you want to upgrade?" IDYES true IDNO false
-            MessageBox MB_ICONINFORMATION|MB_OK "User answer: $0"
-            true:
-                Goto PerformUpgrade
-            false:
-                ; If user chooses not to upgrade, inform them and quit
-                MessageBox MB_ICONINFORMATION|MB_OK "No upgrade performed. SecureIt remains at version $1"
-                Quit
-        ${Else}
-            ; Inform the user that the versions match and quit when they press OK
-            MessageBox MB_ICONINFORMATION|MB_OK "SecureIt is already installed and up to date with version ${PRODUCT_VERSION}"
-            Quit
-        ${EndIf}
-    ${EndIf}
-    Goto DonePerformUpgrade ; Jump past the PerformUpgrade label if not needed
-    PerformUpgrade:
-      ; Perform upgrade actions
-      SetOutPath "$INSTDIR\_internal"
-      RMDir /r "$INSTDIR\_internal\Encryption_App" ; Remove existing Encryption_App directory
-      SetOutPath "$INSTDIR\_internal\Encryption_App"
-      File /r "dist\SecureIt\_internal\Encryption_App\*" ; Install all files from the new version's _internal directory
-
-      SetOutPath "$INSTDIR\_internal"
-      FileOpen $1 "$INSTDIR\_internal\version.txt" "w"
-      FileWrite $1 "${PRODUCT_VERSION}"
-      FileClose $1
-
-      MessageBox MB_ICONINFORMATION|MB_OK "SecureIt has been upgraded to version ${PRODUCT_VERSION}"
-      
-      Quit
-    DonePerformUpgrade:
-FunctionEnd
  
 ; --------------------------------------------------------------------------------------------------
 ; Install section
@@ -238,27 +198,17 @@ FunctionEnd
 
 Section "SecureIt"
 
-    Call CheckInstalledVersion
-
     SetOutPath $INSTDIR
     File /r "dist\SecureIt\*"  ; Include all files and directories in the dist folder
 
-    SetOutPath "$INSTDIR\_internal"
-    FileOpen $1 "$INSTDIR\_internal\version.txt" "w"
-    FileWrite $1 "${PRODUCT_VERSION}"
-    FileClose $1
-
     ; Set permissions for specific files or directories
     AccessControl::GrantOnFile "$INSTDIR\" "(S-1-5-32-545)" "FullAccess"
-
-    ; Set permissions for installed files
-    SetFileAttributes "$INSTDIR\_internal" "Hidden"
 
     ; Create Start menu shortcut
     CreateShortCut "$SMPROGRAMS\SecureIt\SecureIt.lnk" "$INSTDIR\SecureIt.exe" "" "$INSTDIR\ElectronApp\company_images\secureit.ico" "0" "SW_SHOWMAXIMIZED"
 
     ; Write the uninstaller
-    WriteUninstaller "$INSTDIR\SecureIt-Uninstaller.exe"
+    WriteUninstaller "$INSTDIR\SecureItUninstaller.exe"
 
 SectionEnd
 
