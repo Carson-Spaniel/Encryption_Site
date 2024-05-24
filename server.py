@@ -4,6 +4,7 @@ import multiprocessing
 from multiprocessing import freeze_support
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
+import platform
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Encryption_Site.settings')
 application = get_wsgi_application()
@@ -13,11 +14,12 @@ ELECTRON_APP_PATH = os.path.join(os.path.dirname(__file__), 'ElectronApp')
 def start_electron():
     try:
         print('Opening Secure Browser Window')
-        # print(f'Electron App Path: {ELECTRON_APP_PATH}')
-        # Replace 'electron' with the path to your Electron executable
-        electron_path = os.path.join(ELECTRON_APP_PATH, 'node_modules', 'electron', 'dist', 'electron.exe')
+        os_name = platform.system()
+        if os_name == 'Windows':
+            electron_path = os.path.join(ELECTRON_APP_PATH, 'node_modules', 'electron', 'dist', 'electron.exe')
+        else:
+            electron_path = os.path.join(ELECTRON_APP_PATH, 'node_modules', '.bin', 'electron')
 
-        # print(f'Electron Path: {electron_path}')
         electron_process = subprocess.Popen([electron_path, ELECTRON_APP_PATH])
         electron_process.wait()  # Wait for Electron process to finish
         print('Electron process has ended.')
