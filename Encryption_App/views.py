@@ -189,6 +189,16 @@ def remove_password(request):
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
     
+@login_required(login_url='/login/')
+def remove_all_passwords(request):
+    if request.method == 'POST':
+        user = request.user
+        password = WebsitePassword.objects.filter(user=user)
+        password.delete()
+        return JsonResponse({'success': 'Passwords deleted.'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
 def generate_password(request):
     if request.method == "POST":
         password = AES_encrypt.generatePassword()
