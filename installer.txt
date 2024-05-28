@@ -1,0 +1,3 @@
+run this line to create an exe:
+pyinstaller --noconsole --name SecureIt --add-data "ElectronApp;ElectronApp" --add-data "Encryption_App;Encryption_App" --hidden-import=django --icon=secureit.ico server.py
+
