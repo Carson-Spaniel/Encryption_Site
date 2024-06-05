@@ -387,7 +387,7 @@ nav a{
 }
 
 .buttons #logout svg{
-    transform: scale(5) translate(7%, 34%);
+    transform: scale(5) translate(7%, 33%);
 }
 
 .buttons.hidden #logout svg{

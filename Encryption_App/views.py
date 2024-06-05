@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .AES import AES_encrypt
-from .models import WebsitePassword
+from .models import WebsitePassword, Message
 from django.http import JsonResponse, HttpResponseRedirect
 from Crypto.Hash import SHA256
 from datetime import timedelta
@@ -196,6 +196,122 @@ def remove_all_passwords(request):
         password = WebsitePassword.objects.filter(user=user)
         password.delete()
         return JsonResponse({'success': 'Passwords deleted.'}, status=200)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
+@login_required(login_url='/login/')
+def messages_page(request):
+    sha256 = SHA256.new()
+    sha256.update(request.user.password.encode('utf-8'))
+    aes_key = sha256.digest()
+
+    messages = {}
+    jsonMessages = {}
+    encryptedMessages = Message.objects.filter(user=request.user)
+    for encryptedMessage in encryptedMessages:
+        try:
+            decrypted_message = AES_encrypt.decryptPassword(encryptedMessage, aes_key)
+            messages[encryptedMessage.message] = [encryptedMessage.message, decrypted_message]
+            jsonMessages[encryptedMessage.message] = [encryptedMessage.message, decrypted_message]
+        except Exception as e:
+            # print(f"Failed to decrypt password for {encryptedPassword.website}: {e}")
+            messages[encryptedMessage.message] = [encryptedMessage.message, "Decryption failed"]
+            jsonMessages[encryptedMessage.message] = [encryptedMessage.message, "Decryption failed"]
+
+    sortedMessages = dict(sorted(messages.items()))
+    sortedJsonMessages = dict(sorted(jsonMessages.items()))
+
+    return render(request, "messages.html", {'messages':sortedMessages, 'jsonMessages': json.dumps(sortedJsonMessages)})
+
+@login_required(login_url='/login/')
+def add_message_page(request):
+    if request.method == 'POST':
+        try:
+            uploaded_file = request.FILES['uploaded_file']
+            jsonMessages = json.loads(uploaded_file.read())
+
+            for messageTitle, creds in jsonMessages.items():
+                messageTitle = messageTitle.replace("'","").title()
+                messageTitle = creds[0]
+                message = creds[1]
+
+                sha256 = SHA256.new()
+                sha256.update(request.user.password.encode('utf-8'))
+                aes_key = sha256.digest()
+
+                ciphertext, tag, nonce = AES_encrypt.encryptPassword(message, aes_key)
+
+                sha256 = SHA256.new()
+                sha256.update(messageTitle.encode('utf-8'))
+                hashed_message = sha256.digest()
+
+                # Save the password
+                user = request.user
+                encryptedPassword, created = Message.objects.get_or_create(user=user, hashed_message=hashed_message)
+                encryptedPassword.message = messageTitle
+                encryptedPassword.ciphertext = ciphertext
+                encryptedPassword.tag = tag
+                encryptedPassword.nonce = nonce
+                encryptedPassword.save()
+
+        except MultiValueDictKeyError:
+            required_fields = ['websiteName', 'password']
+            missing_fields = [field for field in required_fields if field not in request.POST]
+
+            if missing_fields:
+                return JsonResponse({'error': f"Missing fields: {', '.join(missing_fields)}"}, status=400)
+
+            messageTitle = request.POST['websiteName'].replace("'","").title()
+            message = request.POST['password']
+
+            sha256 = SHA256.new()
+            sha256.update(request.user.password.encode('utf-8'))
+            aes_key = sha256.digest()
+
+            ciphertext, tag, nonce = AES_encrypt.encryptPassword(message, aes_key)
+
+            sha256 = SHA256.new()
+            sha256.update(messageTitle.encode('utf-8'))
+            hashed_message = sha256.digest()
+
+            # Save the password
+            user = request.user
+            encryptedMessage, created = Message.objects.get_or_create(user=user, hashed_message=hashed_message)
+            encryptedMessage.message = messageTitle
+            encryptedMessage.ciphertext = ciphertext
+            encryptedMessage.tag = tag
+            encryptedMessage.nonce = nonce
+            encryptedMessage.save()
+        except:
+            return JsonResponse({'error': 'Invalid file type'}, status=400)
+
+        return JsonResponse({'success': 'Message added.'}, status=200)
+    
+@login_required(login_url='/login/')
+def remove_message(request):
+    if request.method == 'POST':
+        message = request.POST['websiteName'].replace("'","").title()
+
+        if message:
+            user = request.user
+            sha256 = SHA256.new()
+            sha256.update(message.encode('utf-8'))
+            hashed_message = sha256.digest()
+            message = Message.objects.filter(user=user, hashed_message=hashed_message)
+            message.delete()
+            return JsonResponse({'success': 'Message deleted.'}, status=200)
+        else:
+            return JsonResponse({'error': 'Message title not provided.'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
+@login_required(login_url='/login/')
+def remove_all_messages(request):
+    if request.method == 'POST':
+        user = request.user
+        message = Message.objects.filter(user=user)
+        message.delete()
+        return JsonResponse({'success': 'Messages deleted.'}, status=200)
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
 

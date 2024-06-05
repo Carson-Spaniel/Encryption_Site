@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <style>
+        body.dark-mode #messages {
+            background-color: #383838;
+        }
+
+        #messages {
+            background-color: white;
+        }
+
+        #messages svg path {
+            fill: #007bff;
+        }
+
+        #messages span{
+            color: #007bff;
+            font-weight: 900;
+        }
+
+        .password-form {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .password {
+            margin: 10px auto;
+        }
+
+        .password .confirmHidden{
+            display: none;
+        }
+
+        .lastUpdated {
+            margin-bottom: 0;
+        }
+
+        html {
+            scrollbar-width: thin; /* Makes the scrollbar thin */
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Color of the thumb and track */
+        }
+
+        .drag-drop-box{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="password-form">
+        <form id="uploadForm" enctype="multipart/form-data" onsubmit="submitForm()">
+            {% csrf_token %}
+            <h1>Add Message</h1>
+
+            <h2>Message Title</h2>
+            <input type="text" name="websiteName" id="websiteName" placeholder="Enter Message Title">
+            
+            <!-- Password Input (Mutually Exclusive with Key File Upload) -->
+            <h2>Message</h2>
+            <input type="text" name="password" id="password" placeholder="Enter message">
+
+            <label id="file1Label" for="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1Label')" ondragleave="handleDragLeave(event, 'file1Label')" ondrop="handleDrop(event, 'file1')">
+                <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')" accept=".json">
+                Drag and drop or upload messages file
+                <br>
+                <span id="file1Name"></span>
+                <span id="fileSizeError" style="color: red; display: none;">File size exceeds limit.</span>
+            </label>
+
+            <input type="button" value="Add Message" onclick="submitForm()">
+            <input type="reset" value="Reset" onclick="resetForm()">
+            <div id="responseMessage" class="responseMessage"></div>
+        </form>
+    </div>
+    
+    <div>
+        {% for title, credentials in messages.items %}
+            <div class="password" id="{{ forloop.counter }}" style="padding-top: 0px;">
+                <input type="reset" value="&times;" onclick="deleteMessage('{{ title }}', {{ forloop.counter }})" style="position: relative; top: 15px; padding: 5px 8px;">
+                <h1 id="websiteName_{{ forloop.counter }}" style="margin-top: -20px;">{{ title }}</h1>
+
+                <!-- <h2>Password</h2> -->
+                <div class="divContainer">
+                    <input type="password" class="editable-input" id="password_{{ forloop.counter }}" value="{{ credentials.1 }}" onkeydown="showConfirm({{ forloop.counter }})" style="margin-bottom: 0px; width: 80%;">
+                    <input type="button" value="Show" id="button_{{ forloop.counter }}" onclick="togglePasswordVisibility({{ forloop.counter }})" style="padding: 10px 5px; width: 110px; ">
+                </div>
+
+                <div class="confirmHidden">
+                    <input id="hidden_{{ forloop.counter }}" type="button" value="Update Message" onclick="updatePassword({{ forloop.counter }})">
+                </div>
+
+                <div id="responseMessage" class="responseMessage{{forloop.counter}}"></div>
+            </div>
+        {% endfor %}
+        {% if messages.items %}
+            <button onclick="downloadMessages()" class="download">Export Messages</button>
+            <input type="reset" value="Delete All Messages" onclick="deleteAllMessages();">
+        {% endif %}
+    </div>
+</body>
+
+<script>
+    // Function to download passwords as a JSON file
+    function downloadMessages() {
+        const passwords = JSON.parse('{{ jsonMessages | safe }}');
+        const json = JSON.stringify(passwords, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'messages.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // Function to toggle password visibility
+    function togglePasswordVisibility(index) {
+        const passwordField = document.getElementById('password_' + index);
+        const button = document.querySelector('#button_'+index);
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            button.value = 'Hide';
+        } else {
+            passwordField.type = 'password';
+            button.value = 'Show';
+        }
+    }
+
+    function showConfirm(index){
+        const confirmPasswordDiv = document.getElementById('hidden_' + index).parentElement;
+        confirmPasswordDiv.style.display = 'block';
+    }
+
+    // Function to handle form submission
+    function submitForm() {
+        const className = '.responseMessage';
+        const formData = new FormData();
+        if (document.getElementById('file1').files[0]) {
+            formData.append('uploaded_file', document.getElementById('file1').files[0]);
+        }
+        else{
+            const websiteName = document.getElementById('websiteName');
+            const password = document.getElementById('password');
+
+            if(!checkFields(websiteName.value, password.value, className)){
+                return;
+            }
+
+            formData.append('websiteName', websiteName.value);
+            formData.append('password', password.value);
+        }
+
+        performFetch(formData, className);
+    }
+
+    function deleteMessage(websiteName, index) {
+        const userConfirmed = confirm('Are you sure you want to delete the message "' + websiteName + '"?');
+
+        if (userConfirmed) {
+            // Run the function to delete the password
+            console.log('Deleting Message:', websiteName);
+
+            const formData = new FormData();
+            formData.append('websiteName', websiteName);
+
+            const className = '.responseMessage' + index;
+
+            fetch('{% url "remove_message" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Password removed successfully!</div>';
+                document.querySelector(className).style.display = 'block';
+                setTimeout(function() {
+                    document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                    document.querySelector(className).style.display = 'none'; // Hide the element
+                    location.reload();
+                }, 2000);
+            })
+            .catch(error => {
+                document.querySelector(className).innerHTML = '<div id="responseMessage" class="error inner" style="margin-top: 0px;">An error occurred. Please try again.</div>';
+                document.querySelector(className).style.display = 'block';
+                console.error('There was an error!', error);
+                setTimeout(function() {
+                    document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                    document.querySelector(className).style.display = 'none'; // Hide the element
+                }, 2000);
+            });
+        }
+    }
+
+    function deleteAllMessages() {
+        const userConfirmed = confirm('Are you sure you want to delete all messages?');
+
+        if (userConfirmed) {
+            console.log('Deleting messages');
+
+            fetch('{% url "remove_all_messages" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                alert('Messages were deleted');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                alert('There was an error');
+            });
+        }
+    }
+
+    // Function to update password
+    function updatePassword(index) {
+        const websiteName = document.getElementById('websiteName_' + index).textContent;
+        const password = document.getElementById('password_' + index).value;
+        const responseMessageClass = '.responseMessage' + index;
+
+        if(!checkFields(websiteName, password, responseMessageClass)){
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('websiteName', websiteName);
+        formData.append('password', password);
+
+        performFetch(formData, responseMessageClass);
+        document.getElementById('hidden_' + index).parentElement.style.display = "none";
+    }
+
+    function checkFields(websiteName, password, className){
+        if (websiteName && password){
+            return true;
+        }
+        else {
+            document.querySelector(className).innerHTML = '<div id="responseMessage" class="error inner" style="margin-top: 0px;">Please fill in all fields.</div>';
+            document.querySelector(className).style.display = 'block';
+            setTimeout(function() {
+                document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                document.querySelector(className).style.display = 'none'; // Hide the element
+            }, 2000);
+            return false;
+        }
+    }
+
+    function performFetch(formData, className){
+        fetch('{% url "add_message_page" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Message added successfully!</div>';
+            document.querySelector(className).style.display = 'block';
+            if(className === ".responseMessage"){
+                document.getElementById('websiteName').value = "";
+                document.getElementById('password').value = "";
+            }
+            setTimeout(function() {
+                document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                document.querySelector(className).style.display = 'none'; // Hide the element
+                location.reload();
+            }, 2000);
+        })
+        .catch(error => {
+            document.querySelector(className).innerHTML = '<div id="responseMessage" class="error inner" style="margin-top: 0px;">An error occurred. Please try again.</div>';
+            document.querySelector(className).style.display = 'block';
+            console.error('There was an error!', error);
+            setTimeout(function() {
+                document.querySelector(className).innerHTML = ""; // Clear inner HTML
+                document.querySelector(className).style.display = 'none'; // Hide the element
+            }, 2000);
+        });
+    }
+</script>
+
+{% endblock %}

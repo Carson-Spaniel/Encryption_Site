@@ -17,3 +17,15 @@ class WebsitePassword(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.website}'
+    
+class Message(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    hashed_message = models.TextField(blank=True, null=True)
+    message = EncryptedTextField(blank=True, null=True)
+
+    tag = EncryptedTextField(blank=True, null=True)
+    nonce = EncryptedTextField(blank=True, null=True)
+    ciphertext = EncryptedTextField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.message}'

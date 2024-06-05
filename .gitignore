@@ -10,3 +10,4 @@ Installers/*
 **/__pycache__/*
 Encryption_App/__pycache__/
 *.pyc
+Encryption_Site/__pycache__/*
