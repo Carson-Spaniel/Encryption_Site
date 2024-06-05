@@ -182,7 +182,7 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Password removed successfully!</div>';
+                document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Message removed successfully!</div>';
                 document.querySelector(className).style.display = 'block';
                 setTimeout(function() {
                     document.querySelector(className).innerHTML = ""; // Clear inner HTML
