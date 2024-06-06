@@ -62,7 +62,7 @@
             
             <!-- Password Input (Mutually Exclusive with Key File Upload) -->
             <h2>Message</h2>
-            <input type="text" name="password" id="password" placeholder="Enter message">
+            <textarea name="password" id="password" placeholder="Enter message"></textarea>
 
             <label id="file1Label" for="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1Label')" ondragleave="handleDragLeave(event, 'file1Label')" ondrop="handleDrop(event, 'file1')">
                 <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')" accept=".json">
@@ -86,7 +86,8 @@
 
                 <!-- <h2>Password</h2> -->
                 <div class="divContainer">
-                    <input type="password" class="editable-input" id="password_{{ forloop.counter }}" value="{{ credentials.1 }}" onkeydown="showConfirm({{ forloop.counter }})" style="margin-bottom: 0px; width: 80%;">
+                    <textarea class="editable-input" id="password_{{ forloop.counter }}" onkeydown="showConfirm({{ forloop.counter }})" style="margin-bottom: 0px; width: 80%;">{{ credentials.1 }}</textarea>
+                    <!-- <input type="password" class="editable-input" id="password_{{ forloop.counter }}" value="{{ credentials.1 }}" onkeydown="showConfirm({{ forloop.counter }})" style="margin-bottom: 0px; width: 80%;"> -->
                     <input type="button" value="Show" id="button_{{ forloop.counter }}" onclick="togglePasswordVisibility({{ forloop.counter }})" style="padding: 10px 5px; width: 110px; ">
                 </div>
 

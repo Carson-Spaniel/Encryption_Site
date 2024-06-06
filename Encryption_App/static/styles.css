@@ -40,13 +40,20 @@ label {
 }
 
 input[type="text"], input[type="password"],
-input[type="file"] {
+input[type="file"], textarea {
     width: calc(100% - 0px);
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
     box-sizing: border-box;
+    resize: vertical;
+}
+
+textarea {
+    height: 250px;
+    font-family: poppins;
+    font-size: 13.33px;
 }
 
 input[type="button"] {
