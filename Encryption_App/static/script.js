@@ -211,4 +211,3 @@ function getFilenameFromHeaders(headers) {
     }
     return 'file'; // Default filename
 }
-
