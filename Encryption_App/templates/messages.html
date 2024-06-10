@@ -58,11 +58,11 @@
             <h1>Add Note</h1>
 
             <h2>Note Title</h2>
-            <input type="text" name="websiteName" id="websiteName" placeholder="Enter Message Title">
+            <input type="text" name="websiteName" id="websiteName" placeholder="Enter Note Title">
             
             <!-- Password Input (Mutually Exclusive with Key File Upload) -->
             <h2>Note</h2>
-            <textarea name="password" id="password" placeholder="Enter message"></textarea>
+            <textarea name="password" id="password" placeholder="Enter Note"></textarea>
 
             <label id="file1Label" for="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1Label')" ondragleave="handleDragLeave(event, 'file1Label')" ondrop="handleDrop(event, 'file1')">
                 <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')" accept=".json">
