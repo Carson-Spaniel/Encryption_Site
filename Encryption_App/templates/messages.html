@@ -55,24 +55,24 @@
     <div class="password-form">
         <form id="uploadForm" enctype="multipart/form-data" onsubmit="submitForm()">
             {% csrf_token %}
-            <h1>Add Message</h1>
+            <h1>Add Note</h1>
 
-            <h2>Message Title</h2>
+            <h2>Note Title</h2>
             <input type="text" name="websiteName" id="websiteName" placeholder="Enter Message Title">
             
             <!-- Password Input (Mutually Exclusive with Key File Upload) -->
-            <h2>Message</h2>
+            <h2>Note</h2>
             <textarea name="password" id="password" placeholder="Enter message"></textarea>
 
             <label id="file1Label" for="file1" class="drag-drop-box" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event, 'file1Label')" ondragleave="handleDragLeave(event, 'file1Label')" ondrop="handleDrop(event, 'file1')">
                 <input type="file" name="uploaded_file" id="file1" style="display: none;" onchange="displayFileName('file1')" accept=".json">
-                Drag and drop or upload messages file
+                Drag and drop or upload notes file
                 <br>
                 <span id="file1Name"></span>
                 <span id="fileSizeError" style="color: red; display: none;">File size exceeds limit.</span>
             </label>
 
-            <input type="button" value="Add Message" onclick="submitForm()">
+            <input type="button" value="Add Note" onclick="submitForm()">
             <input type="reset" value="Reset" onclick="resetForm()">
             <div id="responseMessage" class="responseMessage"></div>
         </form>
@@ -99,8 +99,8 @@
             </div>
         {% endfor %}
         {% if messages.items %}
-            <button onclick="downloadMessages()" class="download">Export Messages</button>
-            <input type="reset" value="Delete All Messages" onclick="deleteAllMessages();">
+            <button onclick="downloadMessages()" class="download">Export Notes</button>
+            <input type="reset" value="Delete All Notes" onclick="deleteAllMessages();">
         {% endif %}
     </div>
 </body>
@@ -161,11 +161,11 @@
     }
 
     function deleteMessage(websiteName, index) {
-        const userConfirmed = confirm('Are you sure you want to delete the message "' + websiteName + '"?');
+        const userConfirmed = confirm('Are you sure you want to delete the note "' + websiteName + '"?');
 
         if (userConfirmed) {
             // Run the function to delete the password
-            console.log('Deleting Message:', websiteName);
+            console.log('Deleting Note:', websiteName);
 
             const formData = new FormData();
             formData.append('websiteName', websiteName);
@@ -183,7 +183,7 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Message removed successfully!</div>';
+                document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Note removed successfully!</div>';
                 document.querySelector(className).style.display = 'block';
                 setTimeout(function() {
                     document.querySelector(className).innerHTML = ""; // Clear inner HTML
@@ -204,10 +204,10 @@
     }
 
     function deleteAllMessages() {
-        const userConfirmed = confirm('Are you sure you want to delete all messages?');
+        const userConfirmed = confirm('Are you sure you want to delete all notes?');
 
         if (userConfirmed) {
-            console.log('Deleting messages');
+            console.log('Deleting notes');
 
             fetch('{% url "remove_all_messages" %}', {
                 method: 'POST',
@@ -219,7 +219,7 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                alert('Messages were deleted');
+                alert('Notes were deleted');
                 location.reload();
             })
             .catch(error => {
@@ -274,7 +274,7 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Message added successfully!</div>';
+            document.querySelector(className).innerHTML = '<div id="responseMessage" class="success inner" style="margin-top: 0px;">Note added successfully!</div>';
             document.querySelector(className).style.display = 'block';
             if(className === ".responseMessage"){
                 document.getElementById('websiteName').value = "";
