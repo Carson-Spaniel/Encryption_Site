@@ -268,7 +268,7 @@ def add_message_page(request):
             sha256.update(request.user.password.encode('utf-8'))
             aes_key = sha256.digest()
 
-            ciphertext, tag, nonce = AES_encrypt.encryptPassword(message, aes_key)
+            ciphertext, tag, nonce = AES_encrypt.encryptPassword(message, aes_key) # encrypts the message
 
             sha256 = SHA256.new()
             sha256.update(messageTitle.encode('utf-8'))
