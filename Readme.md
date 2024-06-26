@@ -42,7 +42,12 @@ Please note that this is a secure application, and you should only download it f
 
 ## Versions
 
-### [Latest Release] v1.2.0
+### [Latest Release] v1.2.1
+
+- Fixed
+  - Updating password bug
+
+### v1.2.0
 
 - Added
   - Notes page to securely keep notes
