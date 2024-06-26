@@ -17,28 +17,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const navToggle = document.getElementById("hideNav");
+    // const navToggle = document.getElementById("hideNav");
     const bottomButtons = document.querySelector(".buttons");
     const fullButtons = document.querySelector(".fullNavButtons");
     const themeToggle = document.getElementById("themeToggle");
 
     // Check the cookie for the nav state
-    const navState = getCookie("navState") || "shown";
-    if (navState === "hidden") {
+    // const navState = getCookie("navState") || "shown";
+    // if (navState === "hidden") {
+    //     nav.classList.add("hidden");
+    //     navToggle.classList.add("hidden");
+    //     bottomButtons.classList.add("hidden");
+    //     fullButtons.classList.add("hidden");
+    // }
+
+    nav.classList.add("hidden");
+    bottomButtons.classList.add("hidden");
+    fullButtons.classList.add("hidden");
+
+    nav.addEventListener("mouseenter", () => {
+        nav.classList.remove("hidden");
+        // navToggle.classList.remove("hidden");
+        bottomButtons.classList.remove("hidden");
+        fullButtons.classList.remove("hidden");
+    
+        setCookie("navState", "shown", 30);
+    });
+    
+    nav.addEventListener("mouseleave", () => {
         nav.classList.add("hidden");
-        navToggle.classList.add("hidden");
+        // navToggle.classList.add("hidden");
         bottomButtons.classList.add("hidden");
         fullButtons.classList.add("hidden");
-    }
-
-    navToggle.addEventListener("click", () => {
-        const isHidden = nav.classList.toggle("hidden");
-        navToggle.classList.toggle("hidden");
-        bottomButtons.classList.toggle("hidden");
-        fullButtons.classList.toggle("hidden");
-        
-        setCookie("navState", isHidden ? "hidden" : "shown", 30);
+    
+        setCookie("navState", "hidden", 30);
     });
+
+    // navToggle.addEventListener("click", () => {
+    //     const isHidden = nav.classList.toggle("hidden");
+    //     navToggle.classList.toggle("hidden");
+    //     bottomButtons.classList.toggle("hidden");
+    //     fullButtons.classList.toggle("hidden");
+        
+    //     setCookie("navState", isHidden ? "hidden" : "shown", 30);
+    // });
 
     // Check the cookie for the theme state
     const currentTheme = getCookie("theme") || "light";
