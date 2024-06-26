@@ -14,7 +14,6 @@ class WebsitePassword(models.Model):
 
     last_updated = models.DateTimeField(null=True)
     update_ready = models.BooleanField(default=False)
-    data_leak = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.user.username} - {self.website}'
