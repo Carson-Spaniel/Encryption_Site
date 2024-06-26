@@ -1,7 +1,7 @@
 ; Version information
-!define PRODUCT_VERSION "1.2.0"
-VIProductVersion "1.2.0.0"
-OutFile "SecureIt-Installer-1.2.0-win-64.exe"
+!define PRODUCT_VERSION "1.2.1"
+VIProductVersion "1.2.1.0"
+OutFile "SecureIt-Installer-1.2.1-win-64.exe"
 VIAddVersionKey "ProductName" "SecureIt"
 VIAddVersionKey "CompanyName" "Carson Spaniel"
 VIAddVersionKey "FileDescription" "SecureIt Application"
