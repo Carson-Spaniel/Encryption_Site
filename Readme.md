@@ -11,6 +11,7 @@ This project is a secure password manager and file encryption tool that runs loc
 - Add, remove, and update passwords
 - Generate random usernames, secure passwords and passphrases
 - User authentication and authorization
+- Password leak checking
 
 ### File Encryption and Decryption
 - Encrypt files with AES-256 encryption
@@ -41,7 +42,15 @@ Please note that this is a secure application, and you should only download it f
 
 ## Versions
 
-### [Latest Release] v1.1.0
+### [Latest Release] v1.2.0
+
+- Added
+  - Notes page to securely keep notes
+  - Password data leak checking: checks online if your passwords have appeared in online data leaks.
+- Changed
+  - Navigation panel now appears through hovering instead of opening and closing
+
+### v1.1.0
 
 - Added
   - Generated usernames, passwords, and passphrases
