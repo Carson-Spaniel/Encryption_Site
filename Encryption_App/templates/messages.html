@@ -49,6 +49,10 @@
         .drag-drop-box{
             margin-bottom: 30px;
         }
+
+        .divContainer{
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -85,10 +89,11 @@
                 <h1 id="websiteName_{{ forloop.counter }}" style="margin-top: -20px;">{{ title }}</h1>
 
                 <!-- <h2>Password</h2> -->
+                <!-- style="margin-bottom: 0px; width: 80%;" -->
                 <div class="divContainer">
-                    <textarea class="editable-input" id="password_{{ forloop.counter }}" onkeydown="showConfirm({{ forloop.counter }})" style="margin-bottom: 0px; width: 80%;">{{ credentials.1 }}</textarea>
+                    <textarea class="editable-input" id="password_{{ forloop.counter }}" onkeydown="showConfirm({{ forloop.counter }})" >{{ credentials.1 }}</textarea> 
                     <!-- <input type="password" class="editable-input" id="password_{{ forloop.counter }}" value="{{ credentials.1 }}" onkeydown="showConfirm({{ forloop.counter }})" style="margin-bottom: 0px; width: 80%;"> -->
-                    <input type="button" value="Show" id="button_{{ forloop.counter }}" onclick="togglePasswordVisibility({{ forloop.counter }})" style="padding: 10px 5px; width: 110px; ">
+                    <!-- <input type="button" value="Show" id="button_{{ forloop.counter }}" onclick="togglePasswordVisibility({{ forloop.counter }})" style="padding: 10px 5px; width: 110px; "> -->
                 </div>
 
                 <div class="confirmHidden">

@@ -51,9 +51,11 @@ input[type="file"], textarea {
 }
 
 textarea {
-    height: 250px;
-    font-family: poppins;
-    font-size: 13.33px;
+    height: auto;
+    min-height: 250px;
+    max-height: 400px;
+    overflow-y: scroll;
+    resize: none;
 }
 
 input[type="button"] {
