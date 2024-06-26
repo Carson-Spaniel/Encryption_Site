@@ -397,3 +397,9 @@ def signup(request):
         return redirect('encrypt_file')
 
     return render(request, "login.html")
+
+def check_data_leak(request):
+    if request.method == "POST":
+        userPassword = request.POST['password']
+
+        return AES_encrypt.check_password_leak(userPassword)

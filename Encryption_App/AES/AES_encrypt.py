@@ -1,9 +1,10 @@
 from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA256, SHA1
 import io
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 import base64
 from Crypto.Random import get_random_bytes
+import requests
 
 def hash_string(input_string):
     sha256 = SHA256.new()
@@ -109,3 +110,19 @@ def decryptPassword(encryptedPassword, aes_key):
 
 def generatePassword():
     return base64.b64encode(get_random_bytes(32)).decode('utf-8')
+
+def check_password_leak(password):
+    hash_obj = SHA1.new()
+    hash_obj.update(password.encode('utf-8'))
+    full_hash = hash_obj.hexdigest()
+    prefix = full_hash[:5]
+    
+    try: 
+        response = requests.get(f"https://api.pwnedpasswords.com/range/{prefix}")
+    except requests.ConnectionError:
+        return JsonResponse({'password_status': 2}, status=200)
+
+    if full_hash[5:].upper() in response.text.upper():
+        return JsonResponse({'password_status': 1}, status=200)
+    else:
+        return JsonResponse({'password_status': 0}, status=200)

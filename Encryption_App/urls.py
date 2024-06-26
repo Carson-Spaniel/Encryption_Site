@@ -21,4 +21,6 @@ urlpatterns = [
     path('generate_pin/', views.generate_pin, name='generate_pin'),
     path('encrypt/', views.encrypt_file, name='encrypt_file'),
     path('decrypt/', views.decrypt_file, name='decrypt_file'),
+    path('check-data-leak/', views.check_data_leak, name='check_data_leak'),
+
 ]

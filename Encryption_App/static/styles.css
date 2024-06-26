@@ -122,6 +122,13 @@ input[type="reset"]:hover {
     display: block;
 }
 
+#responseMessage.network {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    display: block;
+}
+
 .drag-drop-box {
     border: 2px dashed #ccc;
     padding: 15px;
