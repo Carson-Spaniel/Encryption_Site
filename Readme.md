@@ -73,3 +73,7 @@ Please note that this is a secure application, and you should only download it f
 - Initial release
 
 [Latest Release]: https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing
+
+## Future
+- Possibly adding an auto-updater
+- Secure file storage with options for bulk or individual files
