@@ -42,7 +42,7 @@ Please note that this is a secure application, and you should only download it f
 
 ## Versions
 
-### [Latest Release] v1.2.1
+### v1.2.1 [Latest Release]
 
 - Fixed
   - Updating password bug
@@ -63,7 +63,7 @@ Please note that this is a secure application, and you should only download it f
 - Changed
   - Installer to keep current passwords and only update features
 
-### v1.0.2
+### v1.0.1
 
 - Bug fixes
   - Some passwords were causing errors
@@ -73,3 +73,7 @@ Please note that this is a secure application, and you should only download it f
 - Initial release
 
 [Latest Release]: https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing
+
+## Future
+- Possibly adding an auto-updater
+- Secure file storage with options for bulk or individual files

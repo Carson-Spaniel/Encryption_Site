@@ -46,7 +46,7 @@ def main():
     django_process = multiprocessing.Process(target=start_django_server)
     electron_process = multiprocessing.Process(target=start_electron)
 
-    django_process.start()
+    django_process.start() # Start django first since it takes longer to boot up
     electron_process.start()
 
     # Wait for Electron process to finish
