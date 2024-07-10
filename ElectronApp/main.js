@@ -4,6 +4,8 @@ const path = require('path');
 let mainWindow;
 
 function createWindow() {
+  const port = process.argv[2] || 8000;
+
   // Create the main window
   mainWindow = new BrowserWindow({
     width: 800,
@@ -18,15 +20,15 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadURL('http://localhost:8000');
+  mainWindow.loadURL(`http://localhost:${port}`);
 
   // Handle allowed navigation
   const allowedEndpoints = [
-    'http://localhost:8000/',
-    'http://localhost:8000/passwords',
-    'http://localhost:8000/add-password',
-    'http://localhost:8000/encrypt',
-    'http://localhost:8000/decrypt',
+    `http://localhost:${port}/`,
+    `http://localhost:${port}/passwords`,
+    `http://localhost:${port}/add-password`,
+    `http://localhost:${port}/encrypt`,
+    `http://localhost:${port}/decrypt`,
   ];
   
   mainWindow.webContents.on('will-navigate', (event, url) => {
