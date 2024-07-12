@@ -53,7 +53,6 @@ def main():
     freeze_support()
 
     port = find_available_port()
-    print(f'Running on port {port}')
         
     django_process = multiprocessing.Process(target=start_django_server, args=[port])
     electron_process = multiprocessing.Process(target=start_electron, args=[port])
