@@ -36,7 +36,7 @@ This project is a secure password manager and file encryption tool that runs loc
 
 You can download the latest version of the installer from the following link:
 
-[Download Secure Password Manager and File Encryption Tool](https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing)
+[Download Secure Password Manager and File Encryption Tool](https://github.com/Carson-Spaniel/Encryption_Site/releases/latest)
 
 Please note that this is a secure application, and you should only download it from trusted sources.
 
@@ -72,7 +72,7 @@ Please note that this is a secure application, and you should only download it f
 
 - Initial release
 
-[Latest Release]: https://docs.google.com/document/d/1JyOS9NS0veIGWtwQbDDhqMZkmT9Ly5bGDtJi29cYn0g/edit?usp=sharing
+[Latest Release]: https://github.com/Carson-Spaniel/Encryption_Site/releases/latest
 
 ## Future
 - Possibly adding an auto-updater
